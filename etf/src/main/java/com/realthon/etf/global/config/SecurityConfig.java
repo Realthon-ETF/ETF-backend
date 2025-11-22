@@ -25,8 +25,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.reactive.CorsConfigurationSource;
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,7 +42,9 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
 
     @Bean
-    public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -51,7 +53,6 @@ public class SecurityConfig {
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
-
 
     @Bean
     public AuthenticationManager authenticationManager() throws Exception {
@@ -73,7 +74,9 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider())
 
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource((org.springframework.web.cors.CorsConfigurationSource) corsConfigurationSource()))
+
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm ->
@@ -118,19 +121,21 @@ public class SecurityConfig {
         return http.build();
     }
 
-
     @Bean
     public LogoutHandler logoutHandler() {
         // 필요 시 여기서 refresh 토큰 블랙리스트/폐기 로직 추가
         return new SecurityContextLogoutHandler();
     }
+
     // cors 설정
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(Arrays.asList(
-                "http://localhost:3000", "https://example.vercel.app/"));
+                "http://localhost:3000",
+                "https://example.vercel.app" // 맨 끝 슬래시는 빼주는 게 일반적이긴 해
+        ));
         configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
