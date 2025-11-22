@@ -15,6 +15,11 @@ spring:
     access-ttl: 900000
     refresh-ttl: 604800000
 
+openai:
+  api-key: ${OPENAI_API_KEY}
+  model: gpt-4.1-mini
+
+
 server:
   error:
     include-message: always

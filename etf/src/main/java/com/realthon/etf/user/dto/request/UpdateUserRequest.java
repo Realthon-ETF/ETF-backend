@@ -34,5 +34,8 @@ public class UpdateUserRequest {
     @Min(1)
     private Long intervalDays;
 
-    private LocalTime alarmTime;    // "09:00" 같은 형태로 들어온다고 가정
+    private LocalTime alarmTime;
+
+    @Size(max = 4000)
+    private String resumeSummary;
 }
