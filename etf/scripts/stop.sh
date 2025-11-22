@@ -1,13 +1,17 @@
-#!/usr/bin/env bashPROJECT_ROOT="/home/ubuntu/app"
-JAR_FILE="$PROJECT_ROOT/etf-webapp.jar"
+#!/bin/bash
 
-DEPLOY_LOG="$PROJECT_ROOT/deploy.log"
+# 8080 포트에서 실행 중인 프로세스 ID 찾기
+CURRENT_PID=$(lsof -i :8080 -t)
 
-TIME_NOW=$(date +%c)# 현재 구동 중인 애플리케이션 PID 확인
-CURRENT_PID=$(pgrep -f $JAR_FILE)# 프로세스가 켜져 있으면 종료
-if [ -z $CURRENT_PID ]; then
-  echo "$TIME_NOW > 현재 실행 중인 애플리케이션이 없습니다." >> $DEPLOY_LOG
+if [ -z "$CURRENT_PID" ]; then
+    echo "실행 중인 애플리케이션 없음."
 else
-  echo "$TIME_NOW > 실행 중인 $CURRENT_PID 애플리케이션 종료" >> $DEPLOY_LOG
-  kill -15 $CURRENT_PID
+    echo "애플리케이션 종료: $CURRENT_PID"
+    kill -15 $CURRENT_PID # 정상 종료 시도
+    sleep 5 # 종료될 때까지 대기
+    # 만약 5초 후에도 프로세스가 남아있다면 강제 종료
+    if ps -p $CURRENT_PID > /dev/null; then
+        echo "5초 후에도 종료되지 않아 강제 종료($CURRENT_PID) 실행."
+        kill -9 $CURRENT_PID
+    fi
 fi

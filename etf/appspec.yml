@@ -2,24 +2,19 @@ version: 0.0
 os: linux
 
 files:
-  - source: /
-    destination: /home/ubuntu/app
-    overwrite: yes
-file_exists_behavior: OVERWRITE
-
-permissions:
-  - object: /
-    pattern: "**"
-    owner: ubuntu
-    group: ubuntu
+  - source: /etf-0.0.1-SNAPSHOT.jar
+    destination: /home/ubuntu/app/
+  - source: /appspec.yml
+    destination: /home/ubuntu/
 
 hooks:
   AfterInstall:
+    # 기존에 떠있는 애플리케이션을 종료하는 스크립트
     - location: scripts/stop.sh
       timeout: 60
-      runas: ubuntu
-
+      runas: root
   ApplicationStart:
+    # JAR 파일을 실행하는 스크립트
     - location: scripts/start.sh
       timeout: 60
-      runas: ubuntu
+      runas: root
