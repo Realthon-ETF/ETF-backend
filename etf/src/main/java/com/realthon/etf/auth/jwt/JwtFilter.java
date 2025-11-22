@@ -23,7 +23,6 @@ public class JwtFilter extends OncePerRequestFilter {
         this.jwtUtil = jwtUtil;
     }
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -31,9 +30,15 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         final String path = request.getServletPath();
+        log.debug("[JWT] Enter filter. method={}, path={}", request.getMethod(), path);
 
-        // 인증 제외 경로 & CORS preflight 는 바로 패스
-        if (path.startsWith("/auth/") || "OPTIONS".equalsIgnoreCase(request.getMethod())) {
+        // ✅ 토큰 검사에서 완전히 제외할 공개 경로만 명시
+        boolean isPublicAuthPath =
+                path.equals("/auth/login") ||
+                        path.equals("/auth/refresh") ||
+                        path.startsWith("/auth/signup");
+
+        if (isPublicAuthPath || "OPTIONS".equalsIgnoreCase(request.getMethod())) {
             log.debug("[JWT] Skip path or preflight: {} {}", request.getMethod(), path);
             chain.doFilter(request, response);
             return;
@@ -46,7 +51,7 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 헤더 추출
+        // 헤더 추출 (Bearer 토큰)
         String header = request.getHeader("Authorization");
         if (!StringUtils.hasText(header) || !header.startsWith("Bearer ")) {
             log.debug("[JWT] No Bearer token. path={}", path);
@@ -55,7 +60,8 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         String token = header.substring(7);
-        log.debug("[JWT] Bearer token detected. prefix={}", token.length() > 10 ? token.substring(0, 10) + "..." : token);
+        log.debug("[JWT] Bearer token detected. prefix={}",
+                token.length() > 10 ? token.substring(0, 10) + "..." : token);
 
         // 토큰 유형/유효성 체크
         try {

@@ -8,7 +8,7 @@ import java.time.LocalTime;
 
 @Getter
 @Builder
-public class CreateUserResponse {
+public class UserResponse {
 
     private Long userId;
     private String loginId;
@@ -21,8 +21,8 @@ public class CreateUserResponse {
     private Long intervalDays;
     private LocalTime alarmTime;
 
-    public static CreateUserResponse from(User user) {
-        return CreateUserResponse.builder()
+    public static UserResponse from(User user) {
+        return UserResponse.builder()
                 .userId(user.getUserId())
                 .loginId(user.getLoginId())
                 .username(user.getUsername())

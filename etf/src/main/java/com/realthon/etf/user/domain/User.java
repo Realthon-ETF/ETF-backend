@@ -64,5 +64,25 @@ public class User {
         this.intervalDays = intervalDays;
         this.alarmTime = alarmTime;
     }
+
+    public void updateProfile(String username,
+                              String phoneNumber,
+                              String email,
+                              String school,
+                              String major,
+                              String interestField,
+                              Long intervalDays,
+                              LocalTime alarmTime) {
+
+        if (username != null)      this.username = username;
+        if (phoneNumber != null)   this.phoneNumber = phoneNumber;
+        if (email != null)         this.email = email;
+        if (school != null)        this.school = school;
+        if (major != null)         this.major = major;
+        if (interestField != null) this.interestField = interestField;
+        if (intervalDays != null)  this.intervalDays = intervalDays;
+        if (alarmTime != null)     this.alarmTime = alarmTime;
+    }
+
 }
 
