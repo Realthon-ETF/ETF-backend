@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,6 +24,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -64,15 +71,24 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authenticationProvider(authenticationProvider())
-                .csrf(csrf -> csrf.disable())
-                .cors(cors -> {})
-                .formLogin(form -> form.disable())
-                .httpBasic(basic -> basic.disable())
-                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint((req, res, e) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
-                        .accessDeniedHandler((req, res, e) -> res.sendError(HttpServletResponse.SC_FORBIDDEN))
+
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource((org.springframework.web.cors.CorsConfigurationSource) corsConfigurationSource()))
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .sessionManagement(sm ->
+                        sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(
+                                (req, res, e) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED)
+                        )
+                        .accessDeniedHandler(
+                                (req, res, e) -> res.sendError(HttpServletResponse.SC_FORBIDDEN)
+                        )
+                )
+
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/auth/login", "/auth/refresh", "/auth/signup/**").permitAll()
@@ -81,24 +97,26 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/auth/me").authenticated()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAt(loginFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class); // ← 여기서 체이닝 종료
 
-        http.logout(logout -> logout
-                .logoutUrl("/auth/logout")
-                .addLogoutHandler(logoutHandler())
-                .logoutSuccessHandler((req, res, auth) -> {
-                    res.setHeader("Authorization", "");
-                    res.setHeader("X-Refresh-Token", "");
-                    res.addHeader("Set-Cookie", "AccessToken=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax");
-                    res.addHeader("Set-Cookie", "RefreshToken=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax");
-                    res.setStatus(HttpServletResponse.SC_NO_CONTENT); // 204
-                })
-        );
+                .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(loginFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+
+                .logout(logout -> logout
+                        .logoutUrl("/auth/logout")
+                        .addLogoutHandler(logoutHandler())
+                        .logoutSuccessHandler((req, res, auth) -> {
+                            res.setHeader("Authorization", "");
+                            res.setHeader("X-Refresh-Token", "");
+                            res.addHeader("Set-Cookie",
+                                    "AccessToken=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax");
+                            res.addHeader("Set-Cookie",
+                                    "RefreshToken=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax");
+                            res.setStatus(HttpServletResponse.SC_NO_CONTENT); // 204
+                        })
+                );
 
         return http.build();
     }
-
 
 
     @Bean
@@ -106,6 +124,21 @@ public class SecurityConfig {
         // 필요 시 여기서 refresh 토큰 블랙리스트/폐기 로직 추가
         return new SecurityContextLogoutHandler();
     }
+    // cors 설정
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
 
+        configuration.setAllowedOrigins(Arrays.asList(
+                "http://localhost:3000", "https://example.vercel.app/"));
+        configuration.setAllowedMethods(List.of("*"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
+    }
 
 }
