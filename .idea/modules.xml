@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/ETF-backend.iml" filepath="$PROJECT_DIR$/.idea/ETF-backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/etf.main.iml" filepath="$PROJECT_DIR$/.idea/modules/etf.main.iml" />
     </modules>
   </component>
 </project>

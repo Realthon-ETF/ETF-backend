@@ -22,3 +22,12 @@ server:
     include-stacktrace: always
     whitelabel:
       enabled: false
+
+logging:
+  level:
+    root: INFO
+    com.realthon.etf: DEBUG     # 우리 코드 영역 전반
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG      # 실행 SQL
+    org.hibernate.orm.jdbc.bind: TRACE  # 바인딩 파라미터(값)까지
