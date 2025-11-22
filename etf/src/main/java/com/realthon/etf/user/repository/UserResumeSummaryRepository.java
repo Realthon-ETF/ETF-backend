@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface UserResumeSummaryRepository extends JpaRepository<UserResumeSummary, Long> {
 
     Optional<UserResumeSummary> findByUser(User user);
+
 }

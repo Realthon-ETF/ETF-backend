@@ -21,7 +21,7 @@ public class ResumeController {
     private final UserResumeSummaryRepository resumeSummaryRepository;
     private final ResumeService resumeService;
 
-    @GetMapping("")
+    @GetMapping("/pdf")
     public ResponseEntity<UserResumeSummaryResponse> getMyResumeSummary(
             @AuthenticationPrincipal UserDetails userDetails
     ) {
@@ -46,5 +46,7 @@ public class ResumeController {
         UserResumeSummaryResponse response = resumeService.uploadAndSummarize(loginId, file);
         return ResponseEntity.ok(response);
     }
+
+
 }
 

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ResumeService {
@@ -49,5 +51,13 @@ public class ResumeService {
 
         // 5) 응답 DTO
         return UserResumeSummaryResponse.from(entity);
+    }
+
+    public Optional<UserResumeSummaryResponse> getMyResumeSummary(String loginId) {
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+        return resumeSummaryRepository.findByUser(user)
+                .map(UserResumeSummaryResponse::from);
     }
 }
