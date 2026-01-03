@@ -1,0 +1,25 @@
+package com.realthon.etf.global.exception;
+
+public enum ClientExceptionCode {
+
+    // 전체
+    INTERNAL_SERVER_ERROR,
+    ILLEGAL_ARGUMENT,
+
+    // 인증
+    LOGIN_ERROR,
+    AUTH_SERVER_ERROR,
+    AUTH_TOKEN_EMPTY,
+    ACCESS_TOKEN_EMPTY,
+    REFRESH_TOKEN_EMPTY,
+    AUTH_TOKEN_EXPIRED,
+    AUTH_TOKEN_INVALID,
+    AUTH_TOKEN_MISMATCH,
+
+    // 사용자
+    USER_NOT_FOUND,
+    INVALID_PASSWORD,
+    DUPLICATE_LOGIN_ID,
+    DUPLICATE_PHONE_NUMBER,
+
+}
