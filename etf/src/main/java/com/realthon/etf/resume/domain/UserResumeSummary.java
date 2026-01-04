@@ -1,5 +1,6 @@
-package com.realthon.etf.user.domain;
+package com.realthon.etf.resume.domain;
 
+import com.realthon.etf.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,8 +19,7 @@ public class UserResumeSummary {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
-    @Lob
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String summary;
 
     @Builder
@@ -28,7 +28,7 @@ public class UserResumeSummary {
         this.summary = summary;
     }
 
-    public void updateSummary(String summary) {
+    public void updateUserResumeSummary(String summary) {
         this.summary = summary;
     }
 }

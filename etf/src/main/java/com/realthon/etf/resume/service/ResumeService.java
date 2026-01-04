@@ -1,12 +1,15 @@
 package com.realthon.etf.resume.service;
 
 import com.realthon.etf.ai.OpenAiClient;
+import com.realthon.etf.global.exception.CustomException;
+import com.realthon.etf.global.exception.ExceptionCode;
 import com.realthon.etf.resume.PdfTextExtractor;
+import com.realthon.etf.resume.dto.request.UpdateUserResumeSummaryRequest;
 import com.realthon.etf.user.domain.User;
-import com.realthon.etf.user.domain.UserResumeSummary;
-import com.realthon.etf.user.dto.response.UserResumeSummaryResponse;
+import com.realthon.etf.resume.domain.UserResumeSummary;
+import com.realthon.etf.resume.dto.response.UserResumeSummaryResponse;
 import com.realthon.etf.user.repository.UserRepository;
-import com.realthon.etf.user.repository.UserResumeSummaryRepository;
+import com.realthon.etf.resume.repository.UserResumeSummaryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,16 +26,18 @@ public class ResumeService {
     private final PdfTextExtractor pdfTextExtractor;
     private final OpenAiClient openAiClient;
 
+    /*
+    이력서 요약
+     */
     @Transactional
     public UserResumeSummaryResponse uploadAndSummarize(String loginId, MultipartFile file) {
-        // 1) 유저 찾기
         User user = userRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
 
-        // 2) PDF → 텍스트
+        // PDF → 텍스트
         String plainText = pdfTextExtractor.extractText(file);
 
-        // 3) GPT 요약
+        // GPT 요약
         String summary = openAiClient.summarizeResume(plainText);
 
         // 4) user_resume_summary upsert
@@ -44,20 +49,38 @@ public class ResumeService {
                 );
 
         if (entity.getId() != null) {
-            entity.updateSummary(summary);
+            entity.updateUserResumeSummary(summary);
         } else {
             resumeSummaryRepository.save(entity);
         }
 
-        // 5) 응답 DTO
         return UserResumeSummaryResponse.from(entity);
     }
 
+    /*
+    요약된 이력서 조회
+     */
+    @Transactional(readOnly = true)
     public Optional<UserResumeSummaryResponse> getMyResumeSummary(String loginId) {
         User user = userRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
 
         return resumeSummaryRepository.findByUser(user)
                 .map(UserResumeSummaryResponse::from);
+    }
+
+    /*
+    요약된 이력서 수정
+     */
+    @Transactional
+    public UserResumeSummaryResponse updateUserResumeSummaryResponse(String loginId, UpdateUserResumeSummaryRequest request) {
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
+        UserResumeSummary summary = resumeSummaryRepository.findByUser(user)
+                .orElseThrow(() -> new CustomException(ExceptionCode.RESUME_SUMMARY_NOT_FOUND));
+
+        summary.updateUserResumeSummary(request.getSummary());
+
+        return UserResumeSummaryResponse.from(summary);
     }
 }

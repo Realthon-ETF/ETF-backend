@@ -1,5 +1,6 @@
 package com.realthon.etf.user.dto.request;
 
+import com.realthon.etf.user.domain.InterestField;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
@@ -28,14 +29,10 @@ public class UpdateUserRequest {
     @Size(max = 50)
     private String major;
 
-    @Size(max = 100)
-    private String interestField;
+    private InterestField interestField;
 
     @Min(1)
     private Long intervalDays;
 
     private LocalTime alarmTime;
-
-    @Size(max = 4000)
-    private String resumeSummary;
 }

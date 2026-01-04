@@ -1,5 +1,6 @@
 package com.realthon.etf.user.dto.request;
 
+import com.realthon.etf.user.domain.InterestField;
 import com.realthon.etf.user.domain.User;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -29,23 +30,19 @@ public class CreateUserRequest {
     @Email
     private String email;
 
-    @NotBlank
     @Size(max = 50)
     private String school;
 
-    @NotBlank
     @Size(max = 50)
     private String major;
 
-    @Size(max = 100)
-    private String interestField;
-
     @NotNull
+    private InterestField interestField;
+
     @Min(1)
-    private Long intervalDays;      // 알림 주기 (일 단위)
+    private Long intervalDays;
 
-    @NotNull
-    private LocalTime alarmTime;    // 알람 시간 (예: "09:00", "21:30")
+    private LocalTime alarmTime;
 
     public User toEntity(String encodedPassword) {
         return User.builder()

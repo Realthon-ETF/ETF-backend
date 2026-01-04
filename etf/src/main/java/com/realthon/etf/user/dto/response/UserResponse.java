@@ -1,5 +1,6 @@
 package com.realthon.etf.user.dto.response;
 
+import com.realthon.etf.user.domain.InterestField;
 import com.realthon.etf.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +18,7 @@ public class UserResponse {
     private String email;
     private String school;
     private String major;
-    private String interestField;
+    private InterestField interestField;
     private Long intervalDays;
     private LocalTime alarmTime;
 
