@@ -28,7 +28,8 @@ public enum ExceptionCode {
     DUPLICATE_PHONE_NUMBER(HttpStatus.CONFLICT, ClientExceptionCode.DUPLICATE_PHONE_NUMBER, "이미 사용 중인 전화번호입니다."),
 
     // 이력서
-    RESUME_FILE_REQUIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.RESUME_FILE_REQUIRED, "이력서 PDF 파일을 업로드해 주세요.");
+    RESUME_FILE_REQUIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.RESUME_FILE_REQUIRED, "이력서 PDF 파일을 업로드해 주세요."),
+    RESUME_SUMMARY_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.RESUME_SUMMARY_NOT_FOUND, "이력서 요약본이 없습니다. 먼저 이력서 PDF 업로드를 해주세요.");
 
     private final HttpStatus httpStatus;
     private final ClientExceptionCode clientExceptionCode;

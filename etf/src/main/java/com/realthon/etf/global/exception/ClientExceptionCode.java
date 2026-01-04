@@ -25,5 +25,6 @@ public enum ClientExceptionCode {
 
     // 이력서
     RESUME_FILE_REQUIRED,
+    RESUME_SUMMARY_NOT_FOUND,
 
 }

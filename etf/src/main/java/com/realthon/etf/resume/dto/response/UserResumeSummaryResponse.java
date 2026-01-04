@@ -1,6 +1,6 @@
-package com.realthon.etf.user.dto.response;
+package com.realthon.etf.resume.dto.response;
 
-import com.realthon.etf.user.domain.UserResumeSummary;
+import com.realthon.etf.resume.domain.UserResumeSummary;
 import lombok.Builder;
 import lombok.Getter;
 

@@ -35,7 +35,4 @@ public class UpdateUserRequest {
     private Long intervalDays;
 
     private LocalTime alarmTime;
-
-    @Size(max = 4000)
-    private String resumeSummary;
 }
