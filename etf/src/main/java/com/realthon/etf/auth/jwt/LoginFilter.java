@@ -9,7 +9,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.core.Authentication;
 
@@ -68,14 +67,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                             FilterChain chain, Authentication authentication) throws IOException {
         CustomUserDetails principal = (CustomUserDetails) authentication.getPrincipal();
-        String username = principal.getUsername(); // 내부적으로 loginId 반환하도록 구현되어 있어야 함
+        String username = principal.getUsername();
 
-        String domainRole = principal.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)            // ex) ROLE_ADMIN
-                .map(a -> a.startsWith("ROLE_") ? a.substring(5) : a) // -> ADMIN
-                .findFirst().orElse("EXTERNAL");
-
-        String accessToken  = jwtUtil.createAccessToken(username, domainRole);
+        String accessToken  = jwtUtil.createAccessToken(username);
         String refreshToken = jwtUtil.createRefreshToken(username);
 
         response.setHeader("Authorization", "Bearer " + accessToken);

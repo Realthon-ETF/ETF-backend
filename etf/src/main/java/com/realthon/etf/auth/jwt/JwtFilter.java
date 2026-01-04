@@ -13,6 +13,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
@@ -32,7 +33,7 @@ public class JwtFilter extends OncePerRequestFilter {
         final String path = request.getServletPath();
         log.debug("[JWT] Enter filter. method={}, path={}", request.getMethod(), path);
 
-        // ✅ 토큰 검사에서 완전히 제외할 공개 경로만 명시
+        // 토큰 검사에서 제외할 공개 경로
         boolean isPublicAuthPath =
                 path.equals("/auth/login") ||
                         path.equals("/auth/refresh") ||
@@ -51,7 +52,7 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 헤더 추출 (Bearer 토큰)
+        // Authorization: Bearer xxx
         String header = request.getHeader("Authorization");
         if (!StringUtils.hasText(header) || !header.startsWith("Bearer ")) {
             log.debug("[JWT] No Bearer token. path={}", path);
@@ -63,7 +64,7 @@ public class JwtFilter extends OncePerRequestFilter {
         log.debug("[JWT] Bearer token detected. prefix={}",
                 token.length() > 10 ? token.substring(0, 10) + "..." : token);
 
-        // 토큰 유형/유효성 체크
+        // 토큰 유효성 체크
         try {
             // refresh 토큰이면 거부 (access 만 허용)
             String typ = jwtUtil.getType(token);
@@ -89,32 +90,28 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 클레임에서 subject/role 추출
+        // subject 사용
         String username = jwtUtil.getSubject(token);
-        String domainRole = jwtUtil.getRole(token);
-        if (!StringUtils.hasText(username) || !StringUtils.hasText(domainRole)) {
-            log.warn("[JWT] Missing subject/role in token. path={}", path);
+        if (!StringUtils.hasText(username)) {
+            log.warn("[JWT] Missing subject in token. path={}", path);
             chain.doFilter(request, response);
             return;
         }
 
-        String authority = "ROLE_" + domainRole.trim().toUpperCase();
+        // 권한 없으면 빈 리스트로 세팅 가능
         var userDetails = org.springframework.security.core.userdetails.User
                 .withUsername(username)
-                .password("") // 자격증명은 불필요
-                .authorities(authority)
+                .password("")
+                .authorities(List.of())
                 .build();
 
-        // SecurityContext 설정
         var authentication = new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        log.debug("[JWT] SecurityContext set. user={}, authorities={}, path={}",
-                username, userDetails.getAuthorities(), path);
+        log.debug("[JWT] SecurityContext set. user={}, path={}", username, path);
 
         chain.doFilter(request, response);
     }
 }
-
