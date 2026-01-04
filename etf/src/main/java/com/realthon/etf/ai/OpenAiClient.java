@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Slf4j
@@ -14,86 +14,111 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class OpenAiClient {
 
-    private static final String OPENAI_URL = "https://api.openai.com/v1/responses";
+    private final OpenAiProperties props;
+    private final ObjectMapper objectMapper;
+    private final RestTemplate openAiRestTemplate; // @Bean(name="openAiRestTemplate")로 주입받음
 
-    private final RestTemplate restTemplate = new RestTemplate();
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
-    @Value("${openai.api-key}")
-    private String apiKey;
-
-    @Value("${openai.model:gpt-4.1-mini}")
-    private String model;
-
-    // 공통 호출 함수
+    /**
+     * 공통 호출
+     */
     private String callOpenAi(String systemPrompt, String userContent, double temperature) {
+        // 1. 키 검증: accessToken 들어오는 사고 방지
+        String apiKey = props.getApiKey();
+        if (apiKey == null || apiKey.isBlank()) {
+            throw new IllegalStateException("openai.api-key is missing");
+        }
+        if (!apiKey.startsWith("sk-")) {
+            // JWT가 들어오면 바로 잡아낼 수 있게
+            log.error("openai.api-key is not an OpenAI key. prefix={}, length={}",
+                    apiKey.substring(0, Math.min(3, apiKey.length())), apiKey.length());
+            throw new IllegalStateException("openai.api-key is invalid (not sk-...)");
+        }
+
         try {
+            // 2. Responses API payload
+            // 가장 단순하게 input을 문자열로 구성 (system+user), 필요하면 추후 response_format 등 추가 가능
             var root = objectMapper.createObjectNode();
-            root.put("model", model);
+            root.put("model", props.getModel());
             root.put("temperature", temperature);
 
-            var input = objectMapper.createArrayNode();
-            input.add(objectMapper.createObjectNode()
-                    .put("role", "system")
-                    .put("content", systemPrompt));
-            input.add(objectMapper.createObjectNode()
-                    .put("role", "user")
-                    .put("content", userContent));
-            root.set("input", input);
+            // Responses API는 input에 텍스트를 넣어도 됨
+            // system/user 구분이 필요하면 "instructions"를 같이 쓰는 방식도 가능하지만,
+            // 지금은 가장 안전한 형태로 합쳐서 전달함.
+            String mergedInput = """
+                [SYSTEM]
+                %s
+
+                [USER]
+                %s
+                """.formatted(systemPrompt, userContent);
+
+            root.put("input", mergedInput);
 
             String body = objectMapper.writeValueAsString(root);
 
+            // 3. Headers: 무조건 OpenAI key
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.setBearerAuth(apiKey);
 
             HttpEntity<String> entity = new HttpEntity<>(body, headers);
 
-            ResponseEntity<String> response = restTemplate.exchange(
-                    OPENAI_URL,
+            ResponseEntity<String> response = openAiRestTemplate.exchange(
+                    props.getBaseUrl(),
                     HttpMethod.POST,
                     entity,
                     String.class
             );
 
-            if (!response.getStatusCode().is2xxSuccessful()) {
-                log.error("OpenAI 호출 실패 status={}, body={}",
-                        response.getStatusCode(), response.getBody());
-                throw new RuntimeException("OpenAI 호출 실패");
+            String respBody = response.getBody();
+            if (respBody == null || respBody.isBlank()) {
+                throw new RuntimeException("OpenAI response body is empty");
             }
 
-            JsonNode json = objectMapper.readTree(response.getBody());
+            JsonNode json = objectMapper.readTree(respBody);
 
-            // output_text가 있으면 그거 사용
-            JsonNode outputText = json.path("output_text");
-            if (outputText.isArray() && outputText.size() > 0) {
-                return outputText.get(0).asText();
+            // Responses API: output_text는 보통 문자열(또는 없을 수 있음)
+            JsonNode outputText = json.get("output_text");
+            if (outputText != null && !outputText.isNull() && outputText.isTextual()) {
+                return outputText.asText();
             }
 
-            // 혹시 몰라서 fallback
+            // fallback: output -> content -> text
             JsonNode output = json.path("output");
-            if (output.isArray() && output.size() > 0) {
-                JsonNode content = output.get(0).path("content");
-                if (content.isArray() && content.size() > 0) {
-                    JsonNode textNode = content.get(0).path("text").path("value");
-                    if (!textNode.isMissingNode()) {
-                        return textNode.asText();
+            if (output.isArray()) {
+                for (JsonNode item : output) {
+                    JsonNode contentArr = item.path("content");
+                    if (contentArr.isArray()) {
+                        for (JsonNode c : contentArr) {
+                            JsonNode text = c.path("text");
+                            // 형식이 { "type":"output_text", "text":"..." } 인 경우도 있음
+                            if (text.isTextual()) return text.asText();
+                            JsonNode value = c.path("text").path("value");
+                            if (value.isTextual()) return value.asText();
+                        }
                     }
                 }
             }
 
             throw new RuntimeException("OpenAI 응답에서 텍스트를 찾지 못함");
 
+        } catch (HttpClientErrorException e) {
+            // ✅ 401/400일 때 OpenAI가 준 바디를 반드시 보게 함
+            log.error("OpenAI HTTP error status={}, body={}",
+                    e.getStatusCode(), e.getResponseBodyAsString());
+            throw new RuntimeException("OpenAI 호출 중 HTTP 오류", e);
         } catch (Exception e) {
             log.error("OpenAI 호출 중 예외", e);
             throw new RuntimeException("OpenAI 호출 중 오류", e);
         }
     }
 
-    // 2단계 파이프라인: 이력서 → 분석(JSON 스타일) → 사람 말투 4줄 요약
+    /**
+     * 2단계 파이프라인: 이력서 → 분석(JSON 스타일) → 사람 말투 4줄 요약
+     */
     public String summarizeResume(String plainText) {
         try {
-            String truncated = plainText.length() > 6000
+            String truncated = (plainText != null && plainText.length() > 6000)
                     ? plainText.substring(0, 6000)
                     : plainText;
 
@@ -143,8 +168,8 @@ public class OpenAiClient {
             String stage2User = "이력서 분석 결과:\n" + analysis;
 
             String finalText = callOpenAi(stage2System, stage2User, 0.3);
-
             return finalText.trim();
+
         } catch (Exception e) {
             log.error("이력서 요약 파이프라인 오류", e);
             throw new RuntimeException("이력서 요약 중 오류", e);

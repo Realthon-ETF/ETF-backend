@@ -23,4 +23,7 @@ public enum ClientExceptionCode {
     DUPLICATE_EMAIL,
     DUPLICATE_PHONE_NUMBER,
 
+    // 이력서
+    RESUME_FILE_REQUIRED,
+
 }

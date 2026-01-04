@@ -18,8 +18,7 @@ public class UserResumeSummary {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
-    @Lob
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String summary;
 
     @Builder

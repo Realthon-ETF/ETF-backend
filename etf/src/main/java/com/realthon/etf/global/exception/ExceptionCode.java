@@ -25,7 +25,10 @@ public enum ExceptionCode {
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED,ClientExceptionCode.INVALID_PASSWORD, "비밀번호가 일치하지 않습니다."),
     DUPLICATE_LOGIN_ID(HttpStatus.CONFLICT, ClientExceptionCode.DUPLICATE_LOGIN_ID, "이미 사용 중인 아이디입니다."),
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, ClientExceptionCode.DUPLICATE_EMAIL, "이미 사용 중인 이메일입니다."),
-    DUPLICATE_PHONE_NUMBER(HttpStatus.CONFLICT, ClientExceptionCode.DUPLICATE_PHONE_NUMBER, "이미 사용 중인 전화번호입니다.");
+    DUPLICATE_PHONE_NUMBER(HttpStatus.CONFLICT, ClientExceptionCode.DUPLICATE_PHONE_NUMBER, "이미 사용 중인 전화번호입니다."),
+
+    // 이력서
+    RESUME_FILE_REQUIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.RESUME_FILE_REQUIRED, "이력서 PDF 파일을 업로드해 주세요.");
 
     private final HttpStatus httpStatus;
     private final ClientExceptionCode clientExceptionCode;
