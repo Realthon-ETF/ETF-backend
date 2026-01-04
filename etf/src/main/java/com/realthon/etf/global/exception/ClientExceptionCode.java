@@ -20,6 +20,7 @@ public enum ClientExceptionCode {
     USER_NOT_FOUND,
     INVALID_PASSWORD,
     DUPLICATE_LOGIN_ID,
+    DUPLICATE_EMAIL,
     DUPLICATE_PHONE_NUMBER,
 
 }

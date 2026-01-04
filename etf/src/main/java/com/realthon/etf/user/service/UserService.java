@@ -1,5 +1,7 @@
 package com.realthon.etf.user.service;
 
+import com.realthon.etf.global.exception.CustomException;
+import com.realthon.etf.global.exception.ExceptionCode;
 import com.realthon.etf.user.domain.User;
 import com.realthon.etf.user.dto.request.CreateUserRequest;
 import com.realthon.etf.user.dto.request.UpdateUserRequest;
@@ -26,14 +28,16 @@ public class UserService {
 
         // 중복 체크
         if (userRepository.existsByLoginId(request.getLoginId())) {
-            throw new IllegalArgumentException("이미 사용 중인 로그인 아이디입니다.");
+            throw new CustomException(ExceptionCode.DUPLICATE_LOGIN_ID);
         }
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+            throw new CustomException(ExceptionCode.DUPLICATE_EMAIL);
+        }
+        if(userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+            throw new CustomException(ExceptionCode.DUPLICATE_PHONE_NUMBER);
         }
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
-
         User user = request.toEntity(encodedPassword);
 
         return UserResponse.from(userRepository.save(user));

@@ -20,6 +20,9 @@ public class UserController {
 
     private final UserService userService;
 
+    /*
+    회원가입
+     */
     @PostMapping("/signup")
     public ResponseEntity<UserResponse> signup(@Valid @RequestBody CreateUserRequest request) {
         UserResponse response = userService.createUser(request);

@@ -23,7 +23,7 @@ public class JwtUtil {
             @Value("${spring.jwt.access-ttl:900000}") long accessTtlMillis,
             @Value("${spring.jwt.refresh-ttl:604800000}") long refreshTtlMillis
     ) {
-        this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretBase64));
+        this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretBase64.trim().replaceAll("\\s", "")));
         this.parser = Jwts.parserBuilder().setSigningKey(this.key).build();
         this.accessTtlMillis = accessTtlMillis;
         this.refreshTtlMillis = refreshTtlMillis;

@@ -41,18 +41,26 @@ public class User {
     @Column(nullable = false, length = 50)
     private String major;
 
-    @Column(nullable = true, length = 100)
-    private String interestField;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "interest_field", nullable = false)
+    private InterestField interestField;
 
-    @Column(nullable = false)
-    private Long intervalDays;  // 원하는 알람 주기 (일 단위, ex. 1일, 3일, 7일)
+    @Column(nullable = true)
+    private Long intervalDays = 2L;
 
-    @Column(nullable = false)
-    private LocalTime alarmTime;        // 알람 시간 (24시간 기준, ex. 09:00, 21:30)
+    @Column(nullable = true)
+    private LocalTime alarmTime = LocalTime.of(9, 0); // 알람 시간 (24시간 기준, ex. 09:00, 21:30)
+
+    @PrePersist
+    @PreUpdate
+    private void applyDefaultAlarmSetting() {
+        if (intervalDays == null) intervalDays = 2L;
+        if (alarmTime == null) alarmTime = LocalTime.of(9, 0);
+    }
 
     @Builder
     public User(String loginId, String password, String username, String phoneNumber, String email,
-                String school, String major, String interestField, Long intervalDays, LocalTime alarmTime) {
+                String school, String major, InterestField interestField, Long intervalDays, LocalTime alarmTime) {
         this.loginId = loginId;
         this.password = password;
         this.username = username;
@@ -70,7 +78,7 @@ public class User {
                               String email,
                               String school,
                               String major,
-                              String interestField,
+                              InterestField interestField,
                               Long intervalDays,
                               LocalTime alarmTime) {
 
