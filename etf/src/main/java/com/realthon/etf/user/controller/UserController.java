@@ -1,6 +1,7 @@
 package com.realthon.etf.user.controller;
 
 import com.realthon.etf.user.dto.request.CreateUserRequest;
+import com.realthon.etf.user.dto.request.DeleteUserRequest;
 import com.realthon.etf.user.dto.request.UpdateUserRequest;
 import com.realthon.etf.user.dto.response.UserResponse;
 import com.realthon.etf.user.service.UserService;
@@ -48,5 +49,17 @@ public class UserController {
         String loginId = userDetails.getUsername();
         UserResponse response = userService.updateMyProfile(loginId, request);
         return ResponseEntity.ok(response);
+    }
+
+    /*
+    회원탈퇴
+     */
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deleteUser(@AuthenticationPrincipal UserDetails userDetails,
+                                           @RequestBody @Valid DeleteUserRequest request) {
+
+        String loginId = userDetails.getUsername();
+        userService.deleteUser(loginId, request.getPassword());
+        return ResponseEntity.noContent().build();
     }
 }

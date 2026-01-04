@@ -1,5 +1,6 @@
 package com.realthon.etf.user.domain;
 
+import com.realthon.etf.resume.domain.UserResumeSummary;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
@@ -50,6 +51,10 @@ public class User {
 
     @Column(nullable = true)
     private LocalTime alarmTime = LocalTime.of(9, 0); // 알람 시간 (24시간 기준, ex. 09:00, 21:30)
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private UserResumeSummary resumeSummary;
+
 
     @PrePersist
     @PreUpdate

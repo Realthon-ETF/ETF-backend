@@ -55,7 +55,7 @@ public class UserService {
     }
 
     /*
-    프로필 수정
+    내 프로필 수정
      */
     @Transactional
     public UserResponse updateMyProfile(String loginId, UpdateUserRequest request) {
@@ -76,6 +76,19 @@ public class UserService {
         return UserResponse.from(user);
     }
 
+    /*
+    회원탈퇴
+     */
+    // user 삭제
+    @Transactional
+    public void deleteUser(String loginId, String password) {
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new CustomException(ExceptionCode.INVALID_PASSWORD);
+        }
 
+        userRepository.delete(user);
+    }
 
 }
