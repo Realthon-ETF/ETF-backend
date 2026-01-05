@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
@@ -29,7 +30,7 @@ public class UpdateUserRequest {
     @Size(max = 50)
     private String major;
 
-    private InterestField interestField;
+    private Set<InterestField> interestFields;
 
     @Min(1)
     private Long intervalDays;

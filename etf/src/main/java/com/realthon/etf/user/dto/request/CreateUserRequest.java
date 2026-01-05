@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
@@ -36,8 +37,8 @@ public class CreateUserRequest {
     @Size(max = 50)
     private String major;
 
-    @NotNull
-    private InterestField interestField;
+    @NotEmpty
+    private Set<InterestField> interestFields;
 
     @Min(1)
     private Long intervalDays;
@@ -53,7 +54,7 @@ public class CreateUserRequest {
                 .email(getEmail())
                 .school(getSchool())
                 .major(getMajor())
-                .interestField(getInterestField())
+                .interestFields(getInterestFields())
                 .intervalDays(getIntervalDays())
                 .alarmTime(getAlarmTime())
                 .build();
