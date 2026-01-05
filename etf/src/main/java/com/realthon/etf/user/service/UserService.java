@@ -68,7 +68,7 @@ public class UserService {
                 request.getEmail(),
                 request.getSchool(),
                 request.getMajor(),
-                request.getInterestField(),
+                request.getInterestFields(),
                 request.getIntervalDays(),
                 request.getAlarmTime()
         );

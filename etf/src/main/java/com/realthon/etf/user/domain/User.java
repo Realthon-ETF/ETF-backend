@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.time.LocalTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -42,9 +43,11 @@ public class User {
     @Column(nullable = false, length = 50)
     private String major;
 
+    @ElementCollection
+    @CollectionTable(name = "user_interest_field")
     @Enumerated(EnumType.STRING)
-    @Column(name = "interest_field", nullable = false)
-    private InterestField interestField;
+    @Column(name = "interest_field")
+    private Set<InterestField> interestFields;
 
     @Column(nullable = true)
     private Long intervalDays = 2L;
@@ -65,7 +68,7 @@ public class User {
 
     @Builder
     public User(String loginId, String password, String username, String phoneNumber, String email,
-                String school, String major, InterestField interestField, Long intervalDays, LocalTime alarmTime) {
+                String school, String major, Set<InterestField> interestFields, Long intervalDays, LocalTime alarmTime) {
         this.loginId = loginId;
         this.password = password;
         this.username = username;
@@ -73,7 +76,7 @@ public class User {
         this.email = email;
         this.school = school;
         this.major = major;
-        this.interestField = interestField;
+        this.interestFields = interestFields;
         this.intervalDays = intervalDays;
         this.alarmTime = alarmTime;
     }
@@ -83,7 +86,7 @@ public class User {
                               String email,
                               String school,
                               String major,
-                              InterestField interestField,
+                              Set<InterestField> interestFields,
                               Long intervalDays,
                               LocalTime alarmTime) {
 
@@ -92,7 +95,7 @@ public class User {
         if (email != null)         this.email = email;
         if (school != null)        this.school = school;
         if (major != null)         this.major = major;
-        if (interestField != null) this.interestField = interestField;
+        if (interestFields != null) this.interestFields = interestFields;
         if (intervalDays != null)  this.intervalDays = intervalDays;
         if (alarmTime != null)     this.alarmTime = alarmTime;
     }

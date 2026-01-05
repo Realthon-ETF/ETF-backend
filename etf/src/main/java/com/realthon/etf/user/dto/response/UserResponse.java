@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalTime;
+import java.util.Set;
 
 @Getter
 @Builder
@@ -18,7 +19,7 @@ public class UserResponse {
     private String email;
     private String school;
     private String major;
-    private InterestField interestField;
+    private Set<InterestField> interestFields;
     private Long intervalDays;
     private LocalTime alarmTime;
 
@@ -31,7 +32,7 @@ public class UserResponse {
                 .email(user.getEmail())
                 .school(user.getSchool())
                 .major(user.getMajor())
-                .interestField(user.getInterestField())
+                .interestFields(user.getInterestFields())
                 .intervalDays(user.getIntervalDays())
                 .alarmTime(user.getAlarmTime())
                 .build();
