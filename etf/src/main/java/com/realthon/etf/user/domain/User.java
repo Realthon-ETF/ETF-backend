@@ -1,5 +1,6 @@
 package com.realthon.etf.user.domain;
 
+import com.realthon.etf.notification.domain.Notification;
 import com.realthon.etf.resume.domain.UserResumeSummary;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -7,6 +8,8 @@ import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -58,6 +61,8 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserResumeSummary resumeSummary;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notification> notifications = new ArrayList<>();
 
     @PrePersist
     @PreUpdate

@@ -64,6 +64,8 @@ public class ResumeService {
     public Optional<UserResumeSummaryResponse> getMyResumeSummary(String loginId) {
         User user = userRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
+        resumeSummaryRepository.findById(user.getUserId())
+                .orElseThrow(() -> new CustomException(ExceptionCode.RESUME_SUMMARY_NOT_FOUND));
 
         return resumeSummaryRepository.findByUser(user)
                 .map(UserResumeSummaryResponse::from);
