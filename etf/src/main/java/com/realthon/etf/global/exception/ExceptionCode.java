@@ -19,6 +19,8 @@ public enum ExceptionCode {
     AUTH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, ClientExceptionCode.AUTH_TOKEN_EXPIRED, "만료된 토큰입니다."),
     AUTH_TOKEN_INVALID(HttpStatus.UNAUTHORIZED, ClientExceptionCode.AUTH_TOKEN_INVALID, "올바르지 않은 토큰입니다."),
     AUTH_TOKEN_MISMATCH(HttpStatus.UNAUTHORIZED, ClientExceptionCode.AUTH_TOKEN_MISMATCH, "토큰 소유자가 일치하지 않습니다."),
+    FORBIDDEN(HttpStatus.FORBIDDEN, ClientExceptionCode.FORBIDDEN, "해당 리소스에 대한 권한이 없습니다."),
+
 
     // 사용자
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.USER_NOT_FOUND, "존재하지 않는 회원입니다."),
@@ -29,7 +31,10 @@ public enum ExceptionCode {
 
     // 이력서
     RESUME_FILE_REQUIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.RESUME_FILE_REQUIRED, "이력서 PDF 파일을 업로드해 주세요."),
-    RESUME_SUMMARY_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.RESUME_SUMMARY_NOT_FOUND, "이력서 요약본이 없습니다. 먼저 이력서 PDF 업로드를 해주세요.");
+    RESUME_SUMMARY_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.RESUME_SUMMARY_NOT_FOUND, "이력서 요약본이 없습니다. 먼저 이력서 PDF 업로드를 해주세요."),
+
+    // 알림
+    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.NOTIFICATION_NOT_FOUND, "존재하지 않는 알림입니다.");
 
     private final HttpStatus httpStatus;
     private final ClientExceptionCode clientExceptionCode;

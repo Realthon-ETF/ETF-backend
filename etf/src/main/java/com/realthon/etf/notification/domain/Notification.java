@@ -1,43 +1,59 @@
 package com.realthon.etf.notification.domain;
 
+import com.realthon.etf.user.domain.User;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Builder;
+import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Table(name = "notifications")
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Notification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "notification_id")
+    private Long notificationId;
 
-    // 알림 제목
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @Column(nullable = false, length = 50)
+    private String category;
+
     @Column(nullable = false, length = 200)
     private String title;
 
-    // 알림 내용(요약 or 본문)
-    @Column(columnDefinition = "TEXT")
-    private String content;
+    @Column(name = "source_name", nullable = false, length = 100)
+    private String sourceName;
 
-    // 해당 공지(원문) URL
-    @Column(nullable = false, length = 500)
-    private String noticeUrl;
+    @Column(nullable = false, length = 1000)
+    private String summary;
 
-    // 알림 생성 시각
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "original_url", nullable = false, length = 500)
+    private String originalUrl;
 
-    @Builder
-    public Notification(String title, String content, String noticeUrl, LocalDateTime createdAt) {
-        this.title = title;
-        this.content = content;
-        this.noticeUrl = noticeUrl;
-        this.createdAt = createdAt != null ? createdAt : LocalDateTime.now();
+    @Column(name = "created_at", nullable = false)
+    private Instant createdAt;
+
+    @Column(name = "is_liked")
+    private boolean isLiked = false;
+
+    // relevanceScore 저장하고 싶으면 추가할 예정
+    // @Column(name = "relevance_score", nullable = true)
+    // private Double relevanceScore;
+
+    public void like() {
+        this.isLiked = true;
     }
+
+    public void unlike() {
+        this.isLiked = false;
+    }
+
 }
