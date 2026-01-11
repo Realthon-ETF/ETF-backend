@@ -15,6 +15,7 @@ public enum ClientExceptionCode {
     AUTH_TOKEN_EXPIRED,
     AUTH_TOKEN_INVALID,
     AUTH_TOKEN_MISMATCH,
+    FORBIDDEN,
 
     // 사용자
     USER_NOT_FOUND,
@@ -26,5 +27,8 @@ public enum ClientExceptionCode {
     // 이력서
     RESUME_FILE_REQUIRED,
     RESUME_SUMMARY_NOT_FOUND,
+
+    // 알림
+    NOTIFICATION_NOT_FOUND
 
 }

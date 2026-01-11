@@ -3,6 +3,7 @@ package com.realthon.etf.global.config;
 import com.realthon.etf.auth.jwt.JwtFilter;
 import com.realthon.etf.auth.jwt.JwtUtil;
 import com.realthon.etf.auth.jwt.LoginFilter;
+import com.realthon.etf.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -41,6 +42,7 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
+    private final UserRepository userRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -100,7 +102,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
 
-                .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(jwtUtil, userRepository), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAt(loginFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
 
                 .logout(logout -> logout
