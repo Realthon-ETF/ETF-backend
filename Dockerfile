@@ -1,6 +1,6 @@
 FROM eclipse-temurin:17-jdk-jammy AS build
 WORKDIR /app
-COPY . .
+COPY etf .
 RUN ./gradlew clean bootJar
 
 FROM eclipse-temurin:17-jre-jammy
