@@ -22,10 +22,10 @@ spring:
       hibernate:
         format_sql: ${JPA_FORMAT_SQL:true}
 
-jwt:
-  secret: ${JWT_SECRET}
-  access-ttl: ${JWT_ACCESS_TTL:900000}        # 15분
-  refresh-ttl: ${JWT_REFRESH_TTL:604800000}   # 7일
+  jwt:
+    secret: ${JWT_SECRET}
+    access-ttl: ${JWT_ACCESS_TTL:900000}        # 15분
+    refresh-ttl: ${JWT_REFRESH_TTL:604800000}   # 7일
 
 openai:
   api-key: ${OPENAI_API_KEY}
