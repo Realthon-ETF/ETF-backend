@@ -1,38 +1,49 @@
 spring:
   application:
     name: etf
+
+  profiles:
+    default: local
+
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: ${DB_POOL_MAX:5}
+      minimum-idle: ${DB_POOL_MIN_IDLE:0}
+
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
-  jwt:
-    secret: ${JWT_SECRET}
-    access-ttl: 900000
-    refresh-ttl: 604800000
+      ddl-auto: ${JPA_DDL_AUTO:update}
+    show-sql: ${JPA_SHOW_SQL:true}
+    properties:
+      hibernate:
+        format_sql: ${JPA_FORMAT_SQL:true}
+
+jwt:
+  secret: ${JWT_SECRET}
+  access-ttl: ${JWT_ACCESS_TTL:900000}        # 15분
+  refresh-ttl: ${JWT_REFRESH_TTL:604800000}   # 7일
 
 openai:
   api-key: ${OPENAI_API_KEY}
-  model: gpt-4.1-mini
-
+  model: ${OPENAI_MODEL:gpt-4.1-mini}
 
 server:
   error:
-    include-message: always
-    include-binding-errors: always
-    include-stacktrace: always
+    include-message: ${SERVER_ERROR_INCLUDE_MESSAGE:always}
+    include-binding-errors: ${SERVER_ERROR_INCLUDE_BINDING_ERRORS:always}
+    include-stacktrace: ${SERVER_ERROR_INCLUDE_STACKTRACE:always}
     whitelabel:
       enabled: false
 
 logging:
   level:
-    root: INFO
-    com.realthon.etf: DEBUG     # 우리 코드 영역 전반
-    org.springframework.web: DEBUG
-    org.springframework.security: DEBUG
-    org.hibernate.SQL: DEBUG      # 실행 SQL
-    org.hibernate.orm.jdbc.bind: TRACE  # 바인딩 파라미터(값)까지
+    root: ${LOG_LEVEL_ROOT:INFO}
+    com.realthon.etf: ${LOG_LEVEL_APP:DEBUG}
+    org.springframework.web: ${LOG_LEVEL_WEB:DEBUG}
+    org.springframework.security: ${LOG_LEVEL_SECURITY:DEBUG}
+    org.hibernate.SQL: ${LOG_LEVEL_HIBERNATE_SQL:DEBUG}
+    org.hibernate.orm.jdbc.bind: ${LOG_LEVEL_HIBERNATE_BIND:TRACE}

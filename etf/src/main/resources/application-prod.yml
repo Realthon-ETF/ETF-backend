@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: ${DB_POOL_MAX:10}
+      minimum-idle: ${DB_POOL_MIN_IDLE:2}
+
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO:validate}
+    show-sql: ${JPA_SHOW_SQL:false}
+    properties:
+      hibernate:
+        format_sql: ${JPA_FORMAT_SQL:false}
+
+server:
+  error:
+    include-message: ${SERVER_ERROR_INCLUDE_MESSAGE:never}
+    include-binding-errors: ${SERVER_ERROR_INCLUDE_BINDING_ERRORS:never}
+    include-stacktrace: ${SERVER_ERROR_INCLUDE_STACKTRACE:never}
+    whitelabel:
+      enabled: false
+
+logging:
+  level:
+    root: ${LOG_LEVEL_ROOT:INFO}
+    com.realthon.etf: ${LOG_LEVEL_APP:INFO}
+    org.springframework.web: ${LOG_LEVEL_WEB:INFO}
+    org.springframework.security: ${LOG_LEVEL_SECURITY:INFO}
+    org.hibernate.SQL: ${LOG_LEVEL_HIBERNATE_SQL:WARN}
+    org.hibernate.orm.jdbc.bind: ${LOG_LEVEL_HIBERNATE_BIND:WARN}
