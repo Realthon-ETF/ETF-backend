@@ -134,8 +134,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(Arrays.asList(
-                "http://localhost:3000",
-                "https://example.vercel.app"
+                "http://localhost:5173",
+                "https://etf-frontend-iota.vercel.app/"
         ));
         configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));
