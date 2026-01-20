@@ -42,7 +42,7 @@ server:
 
 ai:
   crawler:
-    url: http://localhost:9999 #임시로
+    url: ${AI_CRAWLER_URL}
     token: ${AI_CRAWLER_TOKEN}
     crawl-path: ${AI_CRAWLER_CRAWL_PATH:/crawl}
     callback-auth-token: ${AI_CALLBACK_AUTH_TOKEN:}
