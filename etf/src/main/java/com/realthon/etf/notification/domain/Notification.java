@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "notifications")
@@ -39,14 +40,11 @@ public class Notification {
     private String originalUrl;
 
     @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
+    @Builder.Default
     @Column(name = "is_liked")
     private boolean isLiked = false;
-
-    // relevanceScore 저장하고 싶으면 추가할 예정
-    // @Column(name = "relevance_score", nullable = true)
-    // private Double relevanceScore;
 
     public void like() {
         this.isLiked = true;
