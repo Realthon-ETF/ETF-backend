@@ -3,6 +3,7 @@ package com.realthon.etf.user.controller;
 import com.realthon.etf.user.dto.request.CreateUserRequest;
 import com.realthon.etf.user.dto.request.DeleteUserRequest;
 import com.realthon.etf.user.dto.request.UpdateUserRequest;
+import com.realthon.etf.user.dto.response.AvailabilityResponse;
 import com.realthon.etf.user.dto.response.UserResponse;
 import com.realthon.etf.user.service.UserService;
 import jakarta.validation.Valid;
@@ -61,5 +62,20 @@ public class UserController {
         String loginId = userDetails.getUsername();
         userService.deleteUser(loginId, request.getPassword());
         return ResponseEntity.noContent().build();
+    }
+
+    /*
+    로그인 ID, 전화번호 중복 체크
+     */
+    @GetMapping("/check-login-id")
+    public AvailabilityResponse checkLoginId(@RequestParam String loginId) {
+        boolean available = userService.isLoginIdAvailable(loginId);
+        return AvailabilityResponse.from(available);
+    }
+
+    @GetMapping("/check-phone")
+    public AvailabilityResponse checkPhone(@RequestParam String phoneNumber) {
+        boolean available = userService.isPhoneAvailable(phoneNumber);
+        return AvailabilityResponse.from(available);
     }
 }
