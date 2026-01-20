@@ -32,7 +32,7 @@ public class User {
     @Column(nullable = false, length = 30)
     private String username;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @Pattern(regexp = "^[0-9\\-]{9,15}$", message = "전화번호 형식이 올바르지 않습니다.")
     private String phoneNumber;
 
