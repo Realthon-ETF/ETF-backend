@@ -1,4 +1,4 @@
-package com.realthon.etf.ai;
+package com.realthon.etf.openAI;
 
 import lombok.Getter;
 import lombok.Setter;

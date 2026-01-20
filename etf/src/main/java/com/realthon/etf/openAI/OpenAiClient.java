@@ -1,4 +1,4 @@
-package com.realthon.etf.ai;
+package com.realthon.etf.openAI;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

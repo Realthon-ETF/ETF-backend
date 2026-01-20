@@ -40,6 +40,13 @@ server:
     whitelabel:
       enabled: false
 
+ai:
+  crawler:
+    url: ${AI_CRAWLER_URL}
+    token: ${AI_CRAWLER_TOKEN}
+    crawl-path: ${AI_CRAWLER_CRAWL_PATH:/crawl}
+    callback-auth-token: ${AI_CALLBACK_AUTH_TOKEN:}
+
 logging:
   level:
     root: ${LOG_LEVEL_ROOT:INFO}

@@ -34,7 +34,13 @@ public enum ExceptionCode {
     RESUME_SUMMARY_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.RESUME_SUMMARY_NOT_FOUND, "이력서 요약본이 없습니다. 먼저 이력서 PDF 업로드를 해주세요."),
 
     // 알림
-    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.NOTIFICATION_NOT_FOUND, "존재하지 않는 알림입니다.");
+    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.NOTIFICATION_NOT_FOUND, "존재하지 않는 알림입니다."),
+
+    // AI
+    AI_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.AI_REQUEST_NOT_FOUND, "AI 요청이 존재하지 않습니다."),
+    AI_CALLBACK_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, ClientExceptionCode.AI_CALLBACK_UNAUTHORIZED, "AI 콜백 인증 실패함"),
+    AI_ALREADY_COMPLETED(HttpStatus.CONFLICT, ClientExceptionCode.AI_ALREADY_COMPLETED, "이미 완료된 AI 요청임"),
+    AI_CRAWLER_CALL_FAILED(HttpStatus.BAD_GATEWAY, ClientExceptionCode.AI_CRAWLER_CALL_FAILED, "AI 크롤러 호출 실패함");
 
     private final HttpStatus httpStatus;
     private final ClientExceptionCode clientExceptionCode;
