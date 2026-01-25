@@ -1,8 +1,9 @@
 FROM eclipse-temurin:17-jdk-jammy AS build
 WORKDIR /app
-COPY . .
-RUN chmod +x gradlew
-RUN ./gradlew clean bootJar
+
+COPY etf/ ./
+RUN chmod +x ./gradlew
+RUN ./gradlew clean bootJar -x test
 
 FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
