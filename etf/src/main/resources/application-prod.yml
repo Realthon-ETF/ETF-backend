@@ -13,6 +13,7 @@ spring:
         format_sql: ${JPA_FORMAT_SQL:false}
 
 server:
+  port: ${PORT:8080}
   error:
     include-message: ${SERVER_ERROR_INCLUDE_MESSAGE:never}
     include-binding-errors: ${SERVER_ERROR_INCLUDE_BINDING_ERRORS:never}
