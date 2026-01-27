@@ -25,6 +25,7 @@ public class AiCrawlerClient {
                     .retrieve()
                     .toBodilessEntity();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new CustomException(ExceptionCode.AI_CRAWLER_CALL_FAILED);
         }
     }
