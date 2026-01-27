@@ -3,11 +3,16 @@ package com.realthon.etf.ai.controller;
 import com.realthon.etf.ai.dto.request.AiCallbackRequest;
 import com.realthon.etf.ai.service.AiCallbackService;
 import com.realthon.etf.ai.service.AiCrawlerService;
+import com.realthon.etf.auth.dto.CustomUserDetails;
 import com.realthon.etf.global.exception.CustomException;
 import com.realthon.etf.global.exception.ExceptionCode;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,46 +26,33 @@ public class AiCrawlerController {
     @Value("${ai.crawler.callback-auth-token:}")
     private String callbackAuthToken;
 
-//    /*
-//     * [프론트 -> 백엔드] "AI 크롤링 요청 트리거"
-//     *
-//     * 엔드포인트 목적:
-//     * - 사용자가 특정 공고/URL을 보고 "이거 AI로 분석/추천 받아줘"를 누르면 호출됨
-//     *
-//     * 처리 흐름:
-//     * 1) JWT 인증을 통해 현재 로그인한 사용자(userDetails)를 얻음
-//     * 2) request body에서 targetUrl만 받아서
-//     * 3) aiCrawlerService.createRequestAndDispatch(userId, targetUrl)로 위임
-//     */
-//    @PostMapping("/crawl/request")
-//    public ResponseEntity<?> requestCrawl(@RequestBody CrawlTriggerRequest request,
-//                                          @AuthenticationPrincipal CustomUserDetails userDetails) {
-//        Long userId = userDetails.getUserId();
-//        return ResponseEntity.ok(aiCrawlerService.createRequestAndDispatch(userId, request.getTargetUrl()));
-//    }
-//
-//    /**
-//     * [프론트 -> 백엔드] 트리거 요청 DTO
-//     *
-//     * 현재 코드에서는 실제로 targetUrl만 쓰고 있음.
-//     *
-//     * 필드 의미:
-//     * - userId: (권장) 받더라도 무시하고 userDetails의 userId를 쓰는 게 안전함
-//     * - targetUrl: AI가 분석/크롤링할 대상 URL
-//     * - userProfile: (권장) 프론트가 주는 값은 신뢰하지 말고 서버에서 UserResponse.from(user)로 만들어서 AI로 보내는 게 맞음
-//     *
-//     * 결론:
-//     * - 지금 구조라면 "userId/userProfile"은 프론트가 보낼 필요가 거의 없음
-//     *   → targetUrl만 받는 DTO로 단순화하는 게 깔끔함
-//     */
-//    @Getter
-//    @NoArgsConstructor
-//    @AllArgsConstructor
-//    public static class CrawlTriggerRequest {
-//        private Long userId;
-//        private String targetUrl;
-//        private UserResponse userProfile;
-//    }
+    /*
+     * [프론트 -> 백엔드] "AI 크롤링 요청 트리거"
+     *
+     * 엔드포인트 목적:
+     * - 사용자가 특정 공고/URL을 보고 "이거 AI로 분석/추천 받아줘"를 누르면 호출됨
+     *
+     * 처리 흐름:
+     * 1) JWT 인증을 통해 현재 로그인한 사용자(userDetails)를 얻음
+     * 2) request body에서 targetUrl만 받아서
+     * 3) aiCrawlerService.createRequestAndDispatch(userId, targetUrl)로 위임
+     */
+    @PostMapping("/crawl/request")
+    public ResponseEntity<?> requestCrawl(@RequestBody CrawlTriggerRequest request,
+                                          @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long userId = userDetails.getUserId();
+        return ResponseEntity.ok(aiCrawlerService.createRequestAndDispatch(userId, request.getTargetUrl()));
+    }
+
+    /*
+     * [프론트 -> 백엔드] 트리거 요청 DTO
+     */
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CrawlTriggerRequest {
+        private String targetUrl;
+    }
 
     /*
      * [AI -> 백엔드] 크롤링 결과 콜백
