@@ -47,6 +47,9 @@ ai:
     crawl-path: ${AI_CRAWLER_CRAWL_PATH:/crawl}
     callback-auth-token: ${AI_CALLBACK_AUTH_TOKEN}
 
+app:
+  public-base-url: ${PUBLIC_BASE_URL}
+
 logging:
   level:
     root: ${LOG_LEVEL_ROOT:INFO}

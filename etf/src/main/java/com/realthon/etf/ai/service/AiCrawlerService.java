@@ -35,8 +35,6 @@ public class AiCrawlerService {
     @Value("${app.public-base-url:http://localhost:8080}")
     private String publicBaseUrl;
 
-    // ⚠️ 이름이 callbackUrl로 되어있지만, 사실상 "AI 서버 base url" 임. (ai.crawler.url)
-    // 예: https://ai-crawler-xxxxx.run.app
     @Value("${ai.crawler.url:}")
     private String aiCrawlerBaseUrl;
 
@@ -87,7 +85,7 @@ public class AiCrawlerService {
                 ? user.getResumeSummary().getSummary()
                 : null;
 
-        String callbackUrl = publicBaseUrl + "/ai/callback/" + requestId;
+        String callbackUrl = (publicBaseUrl + "/ai/callback/" + requestId).trim();
 
         AiCrawlRequest.CallbackDto callback = new AiCrawlRequest.CallbackDto(
                 true,
