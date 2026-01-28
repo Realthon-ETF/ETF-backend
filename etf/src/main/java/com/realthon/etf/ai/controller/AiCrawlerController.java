@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/ai")
+@RequestMapping
 public class AiCrawlerController {
 
     private final AiCrawlerService aiCrawlerService;
@@ -37,7 +37,7 @@ public class AiCrawlerController {
      * 2) request body에서 targetUrl만 받아서
      * 3) aiCrawlerService.createRequestAndDispatch(userId, targetUrl)로 위임
      */
-    @PostMapping("/crawl/request")
+    @PostMapping({"/crawl/request"})
     public ResponseEntity<?> requestCrawl(@RequestBody CrawlTriggerRequest request,
                                           @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long userId = userDetails.getUserId();
