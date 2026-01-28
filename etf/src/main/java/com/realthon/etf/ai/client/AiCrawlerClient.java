@@ -19,6 +19,7 @@ public class AiCrawlerClient {
 
     public void requestCrawl(AiCrawlRequest request) {
         try {
+            System.out.println("[AI_CRAWLER] POST baseUrl + path = " + crawlPath);
             aiRestClient.post()
                     .uri(crawlPath)
                     .body(request)
