@@ -11,6 +11,7 @@ public class RestClientConfig {
     @Bean
     public RestClient aiRestClient(@Value("${ai.crawler.url}") String baseUrl,
                                    @Value("${ai.crawler.token}") String token) {
+        System.out.println("[AI_CRAWLER] baseUrl=" + baseUrl);
         return RestClient.builder()
                 .baseUrl(baseUrl)
                 .defaultHeader("Authorization", "Bearer " + token)
