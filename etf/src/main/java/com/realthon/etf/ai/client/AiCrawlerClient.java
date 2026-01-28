@@ -14,7 +14,7 @@ public class AiCrawlerClient {
 
     private final RestClient aiRestClient;
 
-    @Value("${ai.crawler.crawl-path:/crawl}")
+    @Value("${ai.crawler.crawl-path:/crawl/request}")
     private String crawlPath;
 
     public void requestCrawl(AiCrawlRequest request) {
