@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/ai")
+@RequestMapping
 public class AiCrawlerController {
 
     private final AiCrawlerService aiCrawlerService;
