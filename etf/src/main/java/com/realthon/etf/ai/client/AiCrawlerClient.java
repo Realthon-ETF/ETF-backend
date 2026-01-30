@@ -1,8 +1,6 @@
 package com.realthon.etf.ai.client;
 
 import com.realthon.etf.ai.dto.request.AiCrawlRequest;
-import com.realthon.etf.global.exception.CustomException;
-import com.realthon.etf.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -12,22 +10,20 @@ import org.springframework.web.client.RestClient;
 @RequiredArgsConstructor
 public class AiCrawlerClient {
 
-    private final RestClient aiRestClient;
+    private final RestClient restClient = RestClient.create();
+    private final GoogleIdTokenProvider googleIdTokenProvider;
 
-    @Value("${ai.crawler.crawl-path:/crawl/request}")
-    private String crawlPath;
+    @Value("${ai.crawler.url}")
+    private String baseUrl;
 
     public void requestCrawl(AiCrawlRequest request) {
-        try {
-            System.out.println("[AI_CRAWLER] POST baseUrl + path = " + crawlPath);
-            aiRestClient.post()
-                    .uri(crawlPath)
-                    .body(request)
-                    .retrieve()
-                    .toBodilessEntity();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new CustomException(ExceptionCode.AI_CRAWLER_CALL_FAILED);
-        }
+        String idToken = googleIdTokenProvider.getIdToken(baseUrl);
+
+        restClient.post()
+                .uri(baseUrl + "/crawl/request")   // 실제 FastAPI 엔드포인트로 맞춤
+                .header("Authorization", "Bearer " + idToken)
+                .body(request)
+                .retrieve()
+                .toBodilessEntity();
     }
 }
