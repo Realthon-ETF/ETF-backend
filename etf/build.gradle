@@ -43,6 +43,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
     implementation "com.google.auth:google-auth-library-oauth2-http:1.25.0"
     implementation 'com.google.cloud:google-cloud-resourcemanager:1.26.0'
+    implementation 'com.google.api-client:google-api-client:2.0.0'
 }
 
 tasks.named('test') {

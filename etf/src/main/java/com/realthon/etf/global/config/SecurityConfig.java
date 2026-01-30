@@ -96,7 +96,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/auth/login", "/auth/refresh", "/auth/signup/**",
-                                "/auth/check-login-id", "/auth/check-phone").permitAll()
+                                "/auth/check-login-id", "/auth/check-phone",
+                                "/ai/**", "/crawl/request").permitAll()
                         .requestMatchers("/auth/logout").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/auth/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/auth/me").authenticated()

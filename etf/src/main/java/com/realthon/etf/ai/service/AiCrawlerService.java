@@ -35,9 +35,6 @@ public class AiCrawlerService {
     @Value("${app.public-base-url:http://localhost:8080}")
     private String publicBaseUrl;
 
-    @Value("${ai.crawler.url:}")
-    private String aiCrawlerBaseUrl;
-
     /**
      * [동기] 요청 생성 + 저장(PENDING) + AI 호출
      */
