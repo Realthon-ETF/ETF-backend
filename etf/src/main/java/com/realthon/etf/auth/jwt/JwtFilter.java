@@ -63,47 +63,50 @@ public class JwtFilter extends OncePerRequestFilter {
 
         try {
             String typ = jwtUtil.getType(token);
-
             if ("refresh".equalsIgnoreCase(typ)) {
                 chain.doFilter(request, response);
                 return;
             }
-
             if (jwtUtil.isExpired(token)) {
                 chain.doFilter(request, response);
                 return;
             }
-
-            String loginId = jwtUtil.getSubject(token);
-            if (!StringUtils.hasText(loginId)) {
-                chain.doFilter(request, response);
-                return;
-            }
-
-            User user = userRepository.findByLoginId(loginId).orElse(null);
-
-            if (user == null) {
-                log.warn("[JWT] User not found for subject={}", loginId);
-                chain.doFilter(request, response);
-                return;
-            }
-
-            // 인증 정보 설정
-            CustomUserDetails customUserDetails = new CustomUserDetails(user);
-            var authentication = new UsernamePasswordAuthenticationToken(
-                    customUserDetails,
-                    null,
-                    customUserDetails.getAuthorities()
-            );
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            log.debug("[JWT] SecurityContext set. loginId={}, userId={}, path={}",
-                    loginId, customUserDetails.getUserId(), path);
-
+        } catch (JwtException e) {
+            chain.doFilter(request, response);
+            return;
         } catch (Exception e) {
-            log.warn("[JWT] 유효하지 않은 서비스 토큰입니다 (외부 서비스 토큰 가능성). path={}, message={}", path, e.getMessage());
+            chain.doFilter(request, response);
+            return;
         }
+
+        String loginId = jwtUtil.getSubject(token);
+        if (!StringUtils.hasText(loginId)) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        User user = userRepository.findByLoginId(loginId)
+                .orElse(null);
+
+        if (user == null) {
+            // 토큰은 있는데 사용자가 없으면 인증 세팅하지 않고 통과(혹은 401 처리)
+            log.warn("[JWT] User not found for subject={}", loginId);
+            chain.doFilter(request, response);
+            return;
+        }
+
+        CustomUserDetails customUserDetails = new CustomUserDetails(user);
+
+        var authentication = new UsernamePasswordAuthenticationToken(
+                customUserDetails,
+                null,
+                customUserDetails.getAuthorities()
+        );
+        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        log.debug("[JWT] SecurityContext set. loginId={}, userId={}, path={}",
+                loginId, customUserDetails.getUserId(), path);
 
         chain.doFilter(request, response);
     }
