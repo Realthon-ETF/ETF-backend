@@ -20,7 +20,7 @@ public class AiCrawlerClient {
         String idToken = googleIdTokenProvider.getIdToken(baseUrl);
 
         restClient.post()
-                .uri(baseUrl + "/crawl/request")   // 실제 FastAPI 엔드포인트로 맞춤
+                .uri(baseUrl + "/crawl/request")
                 .header("Authorization", "Bearer " + idToken)
                 .body(request)
                 .retrieve()
