@@ -41,9 +41,7 @@ public class JwtFilter extends OncePerRequestFilter {
         boolean isPublicAuthPath =
                 path.equals("/auth/login") ||
                         path.equals("/auth/refresh") ||
-                        path.startsWith("/auth/signup") ||
-                        path.startsWith("/ai/**") ||
-                        path.equals("/crawl/request");
+                        path.startsWith("/auth/signup");
 
         if (isPublicAuthPath || "OPTIONS".equalsIgnoreCase(request.getMethod())) {
             chain.doFilter(request, response);
