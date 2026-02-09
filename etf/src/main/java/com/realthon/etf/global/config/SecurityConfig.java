@@ -100,6 +100,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/logout").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/auth/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/auth/me").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/callback/**").permitAll()
                         .anyRequest().authenticated()
                 )
 
