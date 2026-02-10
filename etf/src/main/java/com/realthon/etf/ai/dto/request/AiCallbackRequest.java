@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 import java.time.Instant;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -12,8 +13,7 @@ import java.time.Instant;
 public class AiCallbackRequest {
 
     private String status;
-    private Double relevanceScore;
-    private DataDto data;
+    private List<DataDto> data;
 
     @Getter
     @NoArgsConstructor
