@@ -28,6 +28,10 @@ public enum ClientExceptionCode {
     RESUME_FILE_REQUIRED,
     RESUME_SUMMARY_NOT_FOUND,
 
+    // 내 웹 사이트
+    TARGET_URL_NOT_FOUND,
+    TARGET_URL_DUPLICATED,
+
     // 알림
     NOTIFICATION_NOT_FOUND,
 

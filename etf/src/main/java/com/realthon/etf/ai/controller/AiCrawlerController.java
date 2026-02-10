@@ -37,11 +37,10 @@ public class AiCrawlerController {
      * 2) request body에서 targetUrl만 받아서
      * 3) aiCrawlerService.createRequestAndDispatch(userId, targetUrl)로 위임
      */
-    @PostMapping({"/crawl/request"})
-    public ResponseEntity<?> requestCrawl(@RequestBody CrawlTriggerRequest request,
-                                          @AuthenticationPrincipal CustomUserDetails userDetails) {
-        Long userId = userDetails.getUserId();
-        return ResponseEntity.ok(aiCrawlerService.createRequestAndDispatch(userId, request.getTargetUrl()));
+    @PostMapping("/crawl/request")
+    public ResponseEntity<Void> requestCrawl(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        aiCrawlerService.createRequestAndDispatchWithTargetUrls(userDetails.getUserId());
+        return ResponseEntity.ok().build();
     }
 
     /*

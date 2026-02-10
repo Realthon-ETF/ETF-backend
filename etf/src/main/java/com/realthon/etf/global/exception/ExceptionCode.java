@@ -33,6 +33,10 @@ public enum ExceptionCode {
     RESUME_FILE_REQUIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.RESUME_FILE_REQUIRED, "이력서 PDF 파일을 업로드해 주세요."),
     RESUME_SUMMARY_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.RESUME_SUMMARY_NOT_FOUND, "이력서 요약본이 없습니다. 먼저 이력서 PDF 업로드를 해주세요."),
 
+    // 내 웹사이트
+    TARGET_URL_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.TARGET_URL_NOT_FOUND, "존재하지 않는 내 웹 사이트입니다."),
+    TARGET_URL_DUPLICATED(HttpStatus.CONFLICT, ClientExceptionCode.TARGET_URL_DUPLICATED, "이미 등록한 웹 사이트입니다."),
+
     // 알림
     NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.NOTIFICATION_NOT_FOUND, "존재하지 않는 알림입니다."),
 
