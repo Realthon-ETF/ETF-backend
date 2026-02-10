@@ -13,4 +13,5 @@ public interface TargetUrlRepository extends JpaRepository<TargetUrl, Long> {
     Optional<TargetUrl> findByTargetUrlIdAndUser_UserId(Long targetUrlId, Long userId);
     List<TargetUrl> findAllByUser_UserIdOrderByTargetUrlIdDesc(Long userId);
     long countByUser_UserId(Long userId);
+    List<TargetUrl> findAllByUser_UserId(Long userId);
 }

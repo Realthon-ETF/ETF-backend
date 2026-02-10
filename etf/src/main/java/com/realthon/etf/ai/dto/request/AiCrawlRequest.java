@@ -2,6 +2,7 @@ package com.realthon.etf.ai.dto.request;
 
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -11,7 +12,7 @@ import java.util.Set;
 public class AiCrawlRequest {
 
     private String userId;
-    private String targetUrl;
+    private List<String> targetUrls;
     private UserProfile userProfile;
     private String summary;
 
