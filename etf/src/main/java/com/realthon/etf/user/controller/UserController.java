@@ -65,7 +65,7 @@ public class UserController {
     }
 
     /*
-    로그인 ID, 전화번호 중복 체크
+    로그인 ID, 전화번호, 이메일 중복 체크
      */
     @GetMapping("/check-login-id")
     public AvailabilityResponse checkLoginId(@RequestParam String loginId) {
@@ -76,6 +76,12 @@ public class UserController {
     @GetMapping("/check-phone")
     public AvailabilityResponse checkPhone(@RequestParam String phoneNumber) {
         boolean available = userService.isPhoneAvailable(phoneNumber);
+        return AvailabilityResponse.from(available);
+    }
+
+    @GetMapping("/check-email")
+    public AvailabilityResponse checkEmail(@RequestParam String email) {
+        boolean available = userService.isEmailAvailable(email);
         return AvailabilityResponse.from(available);
     }
 }
