@@ -26,6 +26,7 @@ spring:
     secret: ${JWT_SECRET}
     access-ttl: ${JWT_ACCESS_TTL:900000}        # 15분
     refresh-ttl: ${JWT_REFRESH_TTL:604800000}   # 7일
+    reset-ttl: ${JWT_RESET_TTL:600000}          # 10분
 
   mail:
     host: smtp.gmail.com

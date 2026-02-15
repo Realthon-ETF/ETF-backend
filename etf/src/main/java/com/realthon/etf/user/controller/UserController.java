@@ -1,7 +1,9 @@
 package com.realthon.etf.user.controller;
 
+import com.realthon.etf.email.dto.response.SimpleMessageResponse;
 import com.realthon.etf.user.dto.request.CreateUserRequest;
 import com.realthon.etf.user.dto.request.DeleteUserRequest;
+import com.realthon.etf.user.dto.request.ResetPasswordByTokenRequest;
 import com.realthon.etf.user.dto.request.UpdateUserRequest;
 import com.realthon.etf.user.dto.response.AvailabilityResponse;
 import com.realthon.etf.user.dto.response.UserResponse;
@@ -88,4 +90,9 @@ public class UserController {
     /*
     비밀번호 재설정
      */
+    @PostMapping("/reset")
+    public ResponseEntity<SimpleMessageResponse> reset(@RequestBody @Valid ResetPasswordByTokenRequest request) {
+        userService.resetPasswordByToken(request.getResetToken(), request.getNewPassword());
+        return ResponseEntity.ok(new SimpleMessageResponse("비밀번호가 변경되었습니다."));
+    }
 }

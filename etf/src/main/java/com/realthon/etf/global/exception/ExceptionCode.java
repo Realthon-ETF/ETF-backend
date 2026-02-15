@@ -49,7 +49,11 @@ public enum ExceptionCode {
     // 이메일 인증
     EMAIL_VERIFICATION_CODE_INVALID(HttpStatus.BAD_REQUEST, ClientExceptionCode.EMAIL_VERIFICATION_CODE_INVALID, "이메일 인증번호가 올바르지 않습니다."),
     EMAIL_VERIFICATION_CODE_EXPIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.EMAIL_VERIFICATION_CODE_EXPIRED, "이메일 인증번호가 만료되었습니다."),
-    EMAIL_VERIFICATION_REQUIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.EMAIL_VERIFICATION_REQUIRED,  "이메일 인증이 필요합니다.");
+    EMAIL_VERIFICATION_REQUIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.EMAIL_VERIFICATION_REQUIRED,  "이메일 인증이 필요합니다."),
+
+    // 비밀번호 재설정
+    PASSWORD_RESET_TOKEN_INVALID(HttpStatus.BAD_REQUEST, ClientExceptionCode.PASSWORD_RESET_TOKEN_INVALID,"비밀번호 재설정 토큰이 올바르지 않습니다."),
+    PASSWORD_RESET_TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.PASSWORD_RESET_TOKEN_EXPIRED,"비밀번호 재설정 토큰이 만료되었습니다.");
 
     private final HttpStatus httpStatus;
     private final ClientExceptionCode clientExceptionCode;

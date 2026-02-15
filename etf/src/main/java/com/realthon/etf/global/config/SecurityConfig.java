@@ -97,7 +97,7 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/auth/login", "/auth/refresh", "/auth/signup/**",
                                 "/auth/check-login-id", "/auth/check-phone", "/auth/check-email",
-                                "/auth/email/**").permitAll()
+                                "/auth/email/**", "/auth/reset").permitAll()
                         .requestMatchers("/auth/logout").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/auth/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/auth/me").authenticated()
