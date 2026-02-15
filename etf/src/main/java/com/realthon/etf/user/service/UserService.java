@@ -92,7 +92,7 @@ public class UserService {
     }
 
     /*
-    로그인 ID, 전화번호 중복 체크
+    로그인 ID, 전화번호, 이메일 중복 체크
      */
     public boolean isLoginIdAvailable(String loginId) {
         return !userRepository.existsByLoginId(loginId);
@@ -106,6 +106,10 @@ public class UserService {
     private String normalizePhone(String phoneNumber) {
         if (phoneNumber == null) return null;
         return phoneNumber.replaceAll("[^0-9]", "");
+    }
+
+    public boolean isEmailAvailable(String email) {
+        return !userRepository.existsByEmail(email);
     }
 
 }
