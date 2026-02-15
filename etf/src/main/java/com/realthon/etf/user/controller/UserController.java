@@ -84,4 +84,8 @@ public class UserController {
         boolean available = userService.isEmailAvailable(email);
         return AvailabilityResponse.from(available);
     }
+
+    /*
+    비밀번호 재설정
+     */
 }

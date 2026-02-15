@@ -26,16 +26,16 @@ public class UserService {
     @Transactional
     public UserResponse createUser(CreateUserRequest request) {
 
-//        // 중복 체크
-//        if (userRepository.existsByLoginId(request.getLoginId())) {
-//            throw new CustomException(ExceptionCode.DUPLICATE_LOGIN_ID);
-//        }
-//        if (userRepository.existsByEmail(request.getEmail())) {
-//            throw new CustomException(ExceptionCode.DUPLICATE_EMAIL);
-//        }
-//        if(userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
-//            throw new CustomException(ExceptionCode.DUPLICATE_PHONE_NUMBER);
-//        }
+        // 중복 체크
+        if (userRepository.existsByLoginId(request.getLoginId())) {
+            throw new CustomException(ExceptionCode.DUPLICATE_LOGIN_ID);
+        }
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new CustomException(ExceptionCode.DUPLICATE_EMAIL);
+        }
+        if(userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+            throw new CustomException(ExceptionCode.DUPLICATE_PHONE_NUMBER);
+        }
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         User user = request.toEntity(encodedPassword);
@@ -79,7 +79,6 @@ public class UserService {
     /*
     회원탈퇴
      */
-    // user 삭제
     @Transactional
     public void deleteUser(String loginId, String password) {
         User user = userRepository.findByLoginId(loginId)
