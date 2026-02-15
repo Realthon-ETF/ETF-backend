@@ -26,16 +26,16 @@ public class UserService {
     @Transactional
     public UserResponse createUser(CreateUserRequest request) {
 
-        // 중복 체크
-        if (userRepository.existsByLoginId(request.getLoginId())) {
-            throw new CustomException(ExceptionCode.DUPLICATE_LOGIN_ID);
-        }
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new CustomException(ExceptionCode.DUPLICATE_EMAIL);
-        }
-        if(userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
-            throw new CustomException(ExceptionCode.DUPLICATE_PHONE_NUMBER);
-        }
+//        // 중복 체크
+//        if (userRepository.existsByLoginId(request.getLoginId())) {
+//            throw new CustomException(ExceptionCode.DUPLICATE_LOGIN_ID);
+//        }
+//        if (userRepository.existsByEmail(request.getEmail())) {
+//            throw new CustomException(ExceptionCode.DUPLICATE_EMAIL);
+//        }
+//        if(userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+//            throw new CustomException(ExceptionCode.DUPLICATE_PHONE_NUMBER);
+//        }
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         User user = request.toEntity(encodedPassword);
@@ -50,7 +50,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponse getMyProfileByLoginId(String loginId) {
         User user = userRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
         return UserResponse.from(user);
     }
 
@@ -60,7 +60,7 @@ public class UserService {
     @Transactional
     public UserResponse updateMyProfile(String loginId, UpdateUserRequest request) {
         User user = userRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
 
         user.updateProfile(
                 request.getUsername(),
@@ -89,6 +89,27 @@ public class UserService {
         }
 
         userRepository.delete(user);
+    }
+
+    /*
+    로그인 ID, 전화번호, 이메일 중복 체크
+     */
+    public boolean isLoginIdAvailable(String loginId) {
+        return !userRepository.existsByLoginId(loginId);
+    }
+
+    public boolean isPhoneAvailable(String phoneNumber) {
+        String normalized = normalizePhone(phoneNumber);
+        return !userRepository.existsByPhoneNumber(normalized);
+    }
+
+    private String normalizePhone(String phoneNumber) {
+        if (phoneNumber == null) return null;
+        return phoneNumber.replaceAll("[^0-9]", "");
+    }
+
+    public boolean isEmailAvailable(String email) {
+        return !userRepository.existsByEmail(email);
     }
 
 }

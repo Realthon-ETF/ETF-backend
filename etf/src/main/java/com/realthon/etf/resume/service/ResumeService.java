@@ -1,6 +1,6 @@
 package com.realthon.etf.resume.service;
 
-import com.realthon.etf.ai.OpenAiClient;
+import com.realthon.etf.openAI.OpenAiClient;
 import com.realthon.etf.global.exception.CustomException;
 import com.realthon.etf.global.exception.ExceptionCode;
 import com.realthon.etf.resume.PdfTextExtractor;

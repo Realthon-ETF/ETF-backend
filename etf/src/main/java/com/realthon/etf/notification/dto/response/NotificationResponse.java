@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -20,7 +21,7 @@ public class NotificationResponse {
     private String sourceName;
     private String summary;
     private String originalUrl;
-    private Instant createdAt;
+    private LocalDateTime createdAt;
     private boolean isLiked;
 
     public static NotificationResponse from(Notification notification) {

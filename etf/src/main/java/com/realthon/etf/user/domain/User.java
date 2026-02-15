@@ -2,6 +2,7 @@ package com.realthon.etf.user.domain;
 
 import com.realthon.etf.notification.domain.Notification;
 import com.realthon.etf.resume.domain.UserResumeSummary;
+import com.realthon.etf.targetUrl.domain.TargetUrl;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
@@ -32,7 +33,7 @@ public class User {
     @Column(nullable = false, length = 30)
     private String username;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @Pattern(regexp = "^[0-9\\-]{9,15}$", message = "전화번호 형식이 올바르지 않습니다.")
     private String phoneNumber;
 
@@ -63,6 +64,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notification> notifications = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TargetUrl> targetUrls = new ArrayList<>();
 
     @PrePersist
     @PreUpdate

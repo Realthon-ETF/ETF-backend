@@ -95,10 +95,12 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers("/auth/login", "/auth/refresh", "/auth/signup/**").permitAll()
+                        .requestMatchers("/auth/login", "/auth/refresh", "/auth/signup/**",
+                                "/auth/check-login-id", "/auth/check-phone", "/auth/check-email").permitAll()
                         .requestMatchers("/auth/logout").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/auth/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/auth/me").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/callback/**").permitAll()
                         .anyRequest().authenticated()
                 )
 
@@ -134,8 +136,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(Arrays.asList(
-                "http://localhost:3000",
-                "https://example.vercel.app"
+                "http://localhost:5173",
+                "https://etf-frontend-iota.vercel.app/"
         ));
         configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));

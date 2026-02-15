@@ -39,7 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
         log.debug("[JWT] Enter filter. method={}, path={}", request.getMethod(), path);
 
         boolean isPublicAuthPath =
-                path.equals("/auth/login") ||
+                        path.equals("/auth/login") ||
                         path.equals("/auth/refresh") ||
                         path.startsWith("/auth/signup");
 
