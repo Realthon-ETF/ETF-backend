@@ -109,5 +109,9 @@ public class User {
         if (alarmTime != null)     this.alarmTime = alarmTime;
     }
 
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
 }
 

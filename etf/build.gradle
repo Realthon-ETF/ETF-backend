@@ -44,6 +44,7 @@ dependencies {
     implementation "com.google.auth:google-auth-library-oauth2-http:1.25.0"
     implementation 'com.google.cloud:google-cloud-resourcemanager:1.26.0'
     implementation 'com.google.api-client:google-api-client:2.0.0'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 tasks.named('test') {

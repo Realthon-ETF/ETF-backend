@@ -44,7 +44,16 @@ public enum ExceptionCode {
     AI_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.AI_REQUEST_NOT_FOUND, "AI 요청이 존재하지 않습니다."),
     AI_CALLBACK_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, ClientExceptionCode.AI_CALLBACK_UNAUTHORIZED, "AI 콜백 인증 실패함"),
     AI_ALREADY_COMPLETED(HttpStatus.CONFLICT, ClientExceptionCode.AI_ALREADY_COMPLETED, "이미 완료된 AI 요청임"),
-    AI_CRAWLER_CALL_FAILED(HttpStatus.BAD_GATEWAY, ClientExceptionCode.AI_CRAWLER_CALL_FAILED, "AI 크롤러 호출 실패함");
+    AI_CRAWLER_CALL_FAILED(HttpStatus.BAD_GATEWAY, ClientExceptionCode.AI_CRAWLER_CALL_FAILED, "AI 크롤러 호출 실패함"),
+
+    // 이메일 인증
+    EMAIL_VERIFICATION_CODE_INVALID(HttpStatus.BAD_REQUEST, ClientExceptionCode.EMAIL_VERIFICATION_CODE_INVALID, "이메일 인증번호가 올바르지 않습니다."),
+    EMAIL_VERIFICATION_CODE_EXPIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.EMAIL_VERIFICATION_CODE_EXPIRED, "이메일 인증번호가 만료되었습니다."),
+    EMAIL_VERIFICATION_REQUIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.EMAIL_VERIFICATION_REQUIRED,  "이메일 인증이 필요합니다."),
+
+    // 비밀번호 재설정
+    PASSWORD_RESET_TOKEN_INVALID(HttpStatus.BAD_REQUEST, ClientExceptionCode.PASSWORD_RESET_TOKEN_INVALID,"비밀번호 재설정 토큰이 올바르지 않습니다."),
+    PASSWORD_RESET_TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.PASSWORD_RESET_TOKEN_EXPIRED,"비밀번호 재설정 토큰이 만료되었습니다.");
 
     private final HttpStatus httpStatus;
     private final ClientExceptionCode clientExceptionCode;

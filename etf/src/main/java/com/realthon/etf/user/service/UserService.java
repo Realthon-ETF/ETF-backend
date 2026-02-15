@@ -1,5 +1,6 @@
 package com.realthon.etf.user.service;
 
+import com.realthon.etf.auth.jwt.JwtUtil;
 import com.realthon.etf.global.exception.CustomException;
 import com.realthon.etf.global.exception.ExceptionCode;
 import com.realthon.etf.user.domain.User;
@@ -7,6 +8,8 @@ import com.realthon.etf.user.dto.request.CreateUserRequest;
 import com.realthon.etf.user.dto.request.UpdateUserRequest;
 import com.realthon.etf.user.dto.response.UserResponse;
 import com.realthon.etf.user.repository.UserRepository;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     /*
     회원가입
@@ -26,16 +30,16 @@ public class UserService {
     @Transactional
     public UserResponse createUser(CreateUserRequest request) {
 
-//        // 중복 체크
-//        if (userRepository.existsByLoginId(request.getLoginId())) {
-//            throw new CustomException(ExceptionCode.DUPLICATE_LOGIN_ID);
-//        }
-//        if (userRepository.existsByEmail(request.getEmail())) {
-//            throw new CustomException(ExceptionCode.DUPLICATE_EMAIL);
-//        }
-//        if(userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
-//            throw new CustomException(ExceptionCode.DUPLICATE_PHONE_NUMBER);
-//        }
+        // 중복 체크
+        if (userRepository.existsByLoginId(request.getLoginId())) {
+            throw new CustomException(ExceptionCode.DUPLICATE_LOGIN_ID);
+        }
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new CustomException(ExceptionCode.DUPLICATE_EMAIL);
+        }
+        if(userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+            throw new CustomException(ExceptionCode.DUPLICATE_PHONE_NUMBER);
+        }
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         User user = request.toEntity(encodedPassword);
@@ -79,7 +83,6 @@ public class UserService {
     /*
     회원탈퇴
      */
-    // user 삭제
     @Transactional
     public void deleteUser(String loginId, String password) {
         User user = userRepository.findByLoginId(loginId)
@@ -110,6 +113,37 @@ public class UserService {
 
     public boolean isEmailAvailable(String email) {
         return !userRepository.existsByEmail(email);
+    }
+
+    /*
+    비밀번호 재설정
+     */
+    @Transactional
+    public void resetPasswordByToken(String resetToken, String newPassword) {
+
+        try {
+
+            if (!jwtUtil.isPasswordResetToken(resetToken)) {
+                throw new CustomException(ExceptionCode.PASSWORD_RESET_TOKEN_INVALID);
+            }
+            if (jwtUtil.isExpired(resetToken)) {
+                throw new CustomException(ExceptionCode.PASSWORD_RESET_TOKEN_EXPIRED);
+            }
+        } catch (ExpiredJwtException e) {
+            // JWT 라이브러리에서 만료 감지
+            throw new CustomException(ExceptionCode.PASSWORD_RESET_TOKEN_EXPIRED);
+
+        } catch (JwtException | IllegalArgumentException e) {
+            // 서명 오류, 구조 깨짐 등
+            throw new CustomException(ExceptionCode.PASSWORD_RESET_TOKEN_INVALID);
+        }
+
+        String email = jwtUtil.getSubject(resetToken);
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ExceptionCode.USER_NOT_FOUND));
+
+        user.updatePassword(passwordEncoder.encode(newPassword));
     }
 
 }

@@ -16,16 +16,19 @@ public class JwtUtil {
     private final JwtParser parser;
     private final long accessTtlMillis;
     private final long refreshTtlMillis;
+    private final long resetTtlMillis;
 
     public JwtUtil(
             @Value("${spring.jwt.secret}") String secretBase64,
             @Value("${spring.jwt.access-ttl:900000}") long accessTtlMillis,
-            @Value("${spring.jwt.refresh-ttl:604800000}") long refreshTtlMillis
+            @Value("${spring.jwt.refresh-ttl:604800000}") long refreshTtlMillis,
+            @Value("${spring.jwt.reset-ttl:600000}") long resetTtlMillis
     ) {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretBase64.trim().replaceAll("\\s", "")));
         this.parser = Jwts.parserBuilder().setSigningKey(this.key).build();
         this.accessTtlMillis = accessTtlMillis;
         this.refreshTtlMillis = refreshTtlMillis;
+        this.resetTtlMillis = resetTtlMillis;
     }
 
     public String createAccessToken(String loginId) {
@@ -34,6 +37,11 @@ public class JwtUtil {
 
     public String createRefreshToken(String loginId) {
         return buildToken(loginId, "refresh", refreshTtlMillis);
+    }
+
+    // Reset 전용 토큰 (subject=email)
+    public String createPasswordResetToken(String email) {
+        return buildToken(email, "password-reset", resetTtlMillis);
     }
 
     private String buildToken(String subject, String typ, long ttlMillis) {
@@ -55,8 +63,11 @@ public class JwtUtil {
     public String getType(String token)    { return parseClaims(token).get("typ", String.class); }
 
     public boolean isRefreshToken(String token) {
-        String typ = getType(token);
-        return "refresh".equals(typ);
+        return "refresh".equals(getType(token));
+    }
+
+    // reset 토큰 타입 검사
+    public boolean isPasswordResetToken(String token) {
+        return "password-reset".equals(getType(token));
     }
 }
-
