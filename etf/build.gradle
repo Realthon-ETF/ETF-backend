@@ -45,6 +45,7 @@ dependencies {
     implementation 'com.google.cloud:google-cloud-resourcemanager:1.26.0'
     implementation 'com.google.api-client:google-api-client:2.0.0'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.jsoup:jsoup:1.18.1'
 }
 
 tasks.named('test') {

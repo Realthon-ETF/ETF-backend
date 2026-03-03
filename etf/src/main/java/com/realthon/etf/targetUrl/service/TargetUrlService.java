@@ -2,6 +2,10 @@ package com.realthon.etf.targetUrl.service;
 
 import com.realthon.etf.global.exception.CustomException;
 import com.realthon.etf.global.exception.ExceptionCode;
+import com.realthon.etf.recommendation.domain.Recommendation;
+import com.realthon.etf.recommendation.repository.RecommendationRepository;
+import com.realthon.etf.recommendation.service.RecommendationUpsertService;
+import com.realthon.etf.recommendation.util.TitleExtractor;
 import com.realthon.etf.targetUrl.domain.TargetUrl;
 import com.realthon.etf.targetUrl.dto.request.TargetUrlRequest;
 import com.realthon.etf.targetUrl.dto.response.TargetUrlListResponse;
@@ -10,6 +14,7 @@ import com.realthon.etf.targetUrl.repository.TargetUrlRepository;
 import com.realthon.etf.user.domain.User;
 import com.realthon.etf.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +27,7 @@ public class TargetUrlService {
 
     private final TargetUrlRepository targetUrlRepository;
     private final UserRepository userRepository;
+    private final RecommendationUpsertService recommendationUpsertService;
 
     /*
     target-url 등록
@@ -40,6 +46,8 @@ public class TargetUrlService {
                         .targetUrl(url)
                         .build()
         );
+
+        recommendationUpsertService.insertIfNotExists(url); // recommedation에 추가
 
         return TargetUrlResponse.from(saved);
     }
@@ -61,9 +69,16 @@ public class TargetUrlService {
             throw new CustomException(ExceptionCode.TARGET_URL_DUPLICATED);
         }
 
+        boolean changed = !targetUrl.getTargetUrl().equals(newUrl);
         targetUrl.updateUrl(newUrl);
+
+        if (changed) {
+            recommendationUpsertService.insertIfNotExists(newUrl); // recommedation에 추가
+        }
+
         return TargetUrlResponse.from(targetUrl);
     }
+
 
     /*
     target-url 삭제
