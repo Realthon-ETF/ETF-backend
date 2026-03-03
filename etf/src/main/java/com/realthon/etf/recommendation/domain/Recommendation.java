@@ -17,5 +17,7 @@ public class Recommendation {
     private Long recommendationId;
 
     private String title;
+
+    @Column(nullable = false, length = 100, unique = true)
     private String url;
 }

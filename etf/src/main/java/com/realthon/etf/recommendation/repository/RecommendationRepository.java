@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RecommendationRepository extends JpaRepository<Recommendation, Long> {
 
@@ -27,4 +28,7 @@ public interface RecommendationRepository extends JpaRepository<Recommendation, 
         LIMIT 5
         """, nativeQuery = true)
     List<Recommendation> findRandom5();
+
+    Optional<Recommendation> findByUrl(String url);
+    boolean existsByUrl(String url);
 }
