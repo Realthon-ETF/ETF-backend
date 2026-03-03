@@ -15,14 +15,23 @@ import java.util.List;
 @RequestMapping("/recommendations")
 public class RecommendationController {
 
-    private final RecommendationService recommendationQueryService;
+    private final RecommendationService recommendationService;
 
     /*
     랜덤 추천 5개 조회
      */
     @GetMapping
     public List<RecommendationListResponse> getRandom5(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        List<Recommendation> list = recommendationQueryService.getRandom5ForUser(userDetails.getUserId());
+        List<Recommendation> list = recommendationService.getRandom5ForUser(userDetails.getUserId());
         return list.stream().map(RecommendationListResponse::from).toList();
+    }
+
+    /*
+    추천 결과 저장
+     */
+    @PostMapping("/{recommendationId}")
+    public void saveRecommendationUrl(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                      @PathVariable Long recommendationId) {
+        recommendationService.saveRecommendationUrl(userDetails.getUserId(), recommendationId);
     }
 }

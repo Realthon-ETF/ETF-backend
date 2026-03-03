@@ -53,7 +53,11 @@ public enum ExceptionCode {
 
     // 비밀번호 재설정
     PASSWORD_RESET_TOKEN_INVALID(HttpStatus.BAD_REQUEST, ClientExceptionCode.PASSWORD_RESET_TOKEN_INVALID,"비밀번호 재설정 토큰이 올바르지 않습니다."),
-    PASSWORD_RESET_TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.PASSWORD_RESET_TOKEN_EXPIRED,"비밀번호 재설정 토큰이 만료되었습니다.");
+    PASSWORD_RESET_TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, ClientExceptionCode.PASSWORD_RESET_TOKEN_EXPIRED,"비밀번호 재설정 토큰이 만료되었습니다."),
+
+    // 추천
+    RECOMMENDATION_NOT_FOUND(HttpStatus.NOT_FOUND, ClientExceptionCode.RECOMMENDATION_NOT_FOUND, "추천 정보를 찾을 수 없습니다."),
+    TARGET_URL_ALREADY_EXISTS(HttpStatus.CONFLICT, ClientExceptionCode.TARGET_URL_ALREADY_EXISTS, "이미 등록된 URL입니다.");
 
     private final HttpStatus httpStatus;
     private final ClientExceptionCode clientExceptionCode;

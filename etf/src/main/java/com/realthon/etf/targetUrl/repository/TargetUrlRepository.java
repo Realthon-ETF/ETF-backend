@@ -18,4 +18,7 @@ public interface TargetUrlRepository extends JpaRepository<TargetUrl, Long> {
     @Query("SELECT t.targetUrl FROM TargetUrl t WHERE t.user.userId = :userId")
     List<String> findUrlsByUserId(@Param("userId") Long userId);
 
+    @Query("select count(t) > 0 from TargetUrl t where t.user.userId = :userId and t.targetUrl = :url")
+    boolean existsByUserIdAndUrl(@Param("userId") Long userId, @Param("url") String url);
+
 }
