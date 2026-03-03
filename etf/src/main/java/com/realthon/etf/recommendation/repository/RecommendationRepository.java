@@ -16,7 +16,7 @@ public interface RecommendationRepository extends JpaRepository<Recommendation, 
         FROM recommendation r
         WHERE r.url NOT IN (:excludedUrls)
         ORDER BY RANDOM()
-        LIMIT 5
+        LIMIT 10
         """, nativeQuery = true)
     List<Recommendation> findRandom5ExcludeUrls(@Param("excludedUrls") List<String> excludedUrls);
 
@@ -25,7 +25,7 @@ public interface RecommendationRepository extends JpaRepository<Recommendation, 
         SELECT *
         FROM recommendation r
         ORDER BY RANDOM()
-        LIMIT 5
+        LIMIT 10
         """, nativeQuery = true)
     List<Recommendation> findRandom5();
 

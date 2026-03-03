@@ -18,11 +18,11 @@ public class RecommendationController {
     private final RecommendationService recommendationService;
 
     /*
-    랜덤 추천 5개 조회
+    랜덤 추천 10개 조회
      */
     @GetMapping
-    public List<RecommendationListResponse> getRandom5(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        List<Recommendation> list = recommendationService.getRandom5ForUser(userDetails.getUserId());
+    public List<RecommendationListResponse> getRandom10(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        List<Recommendation> list = recommendationService.getRandom10ForUser(userDetails.getUserId());
         return list.stream().map(RecommendationListResponse::from).toList();
     }
 

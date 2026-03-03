@@ -24,7 +24,7 @@ public class RecommendationService {
     private final UserRepository userRepository;
 
     // 추천 url 조회
-    public List<Recommendation> getRandom5ForUser(Long userId) {
+    public List<Recommendation> getRandom10ForUser(Long userId) {
         getUserById(userId);
 
         List<String> excludedUrls = targetUrlRepository.findUrlsByUserId(userId);
