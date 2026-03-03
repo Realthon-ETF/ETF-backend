@@ -1,0 +1,70 @@
+spring:
+  application:
+    name: etf
+
+  profiles:
+    default: local
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: ${DB_POOL_MAX:5}
+      minimum-idle: ${DB_POOL_MIN_IDLE:0}
+
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO:update}
+    show-sql: ${JPA_SHOW_SQL:true}
+    properties:
+      hibernate:
+        format_sql: ${JPA_FORMAT_SQL:true}
+
+  jwt:
+    secret: ${JWT_SECRET}
+    access-ttl: ${JWT_ACCESS_TTL:900000}        # 15분
+    refresh-ttl: ${JWT_REFRESH_TTL:604800000}   # 7일
+    reset-ttl: ${JWT_RESET_TTL:600000}          # 10분
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: allyeojujob@gmail.com
+    password: ${APP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            connectiontimeout: 5000 # 클라이언트가 SMTP 서버와의 연결을 설정하는 데 대기해야 하는 시간
+            timeout: 5000 # 클라이언트가 SMTP 서버로부터 응답을 대기해야 하는 시간
+            writetimeout: 5000 # 클라이언트가 작업을 완료하는데 대기해야 하는 시간
+    auth-code-expiration-millis: 1800000
+
+openai:
+  api-key: ${OPENAI_API_KEY}
+  model: ${OPENAI_MODEL:gpt-4.1-mini}
+
+server:
+  port: ${PORT:8080}
+  error:
+    include-message: ${SERVER_ERROR_INCLUDE_MESSAGE:always}
+    include-binding-errors: ${SERVER_ERROR_INCLUDE_BINDING_ERRORS:always}
+    include-stacktrace: ${SERVER_ERROR_INCLUDE_STACKTRACE:always}
+    whitelabel:
+      enabled: false
+
+app:
+  public-base-url: ${PUBLIC_BASE_URL}
+
+logging:
+  level:
+    root: ${LOG_LEVEL_ROOT:INFO}
+    com.realthon.etf: ${LOG_LEVEL_APP:DEBUG}
+    org.springframework.web: ${LOG_LEVEL_WEB:DEBUG}
+    org.springframework.security: ${LOG_LEVEL_SECURITY:DEBUG}
+    org.hibernate.SQL: ${LOG_LEVEL_HIBERNATE_SQL:DEBUG}
+    org.hibernate.orm.jdbc.bind: ${LOG_LEVEL_HIBERNATE_BIND:TRACE}
