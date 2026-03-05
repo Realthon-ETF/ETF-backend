@@ -23,6 +23,13 @@ public enum InterestField {
     CUSTOMER_MANAGEMENT("영업/고객상담 - 고객관리/인바운드 - 고객관리"),
     INBOUND("영업/고객상담 - 고객관리/인바운드 - 인바운드"),
 
+    GENERAL_SALES_ETC("영업/고객상담 - 일반영업 - 기타"),
+    B2B_SALES_ETC("영업/고객상담 - B2B영업/기술영업 - 기타"),
+    SALES_OPERATION_ETC("영업/고객상담 - 영업관리/지원/영업기획 - 기타"),
+    STORE_OPERATION_ETC("영업/고객상담 - 판매/캐셔/매장관리 - 기타"),
+    OUTBOUND_TM_ETC("영업/고객상담 - 아웃바운드 TM - 기타"),
+    CUSTOMER_SUPPORT_ETC("영업/고객상담 - 고객관리/인바운드 - 기타"),
+
     // 경영/사무
     BUSINESS_PLANNING("경영/사무 - 기획/전략/경영 - 사업기획"),
     SERVICE_PLANNING("경영/사무 - 기획/전략/경영 - 서비스기획/운영"),
@@ -45,6 +52,13 @@ public enum InterestField {
     DOCUMENT_WRITING("경영/사무 - 사무보조/문서작성 - OA/문서작성"),
     WEBSITE_MANAGEMENT("경영/사무 - 사무보조/문서작성 - 홈페이지관리"),
 
+    BUSINESS_STRATEGY_ETC("경영/사무 - 기획/전략/경영 - 기타"),
+    OFFICE_ADMIN_ETC("경영/사무 - 사무/총무/법무 - 기타"),
+    HR_ETC("경영/사무 - 인사/노무/교육 - 기타"),
+    ACCOUNTING_ETC("경영/사무 - 경리/회계/결산 - 기타"),
+    FINANCE_ETC("경영/사무 - 재무/세무/IR - 기타"),
+    OFFICE_SUPPORT_ETC("경영/사무 - 사무보조/문서작성 - 기타"),
+
     // 마케팅
     MARKETING_STRATEGY("마케팅/광고/홍보 - 마케팅/PR/분석 - 마케팅전략/기획"),
     AD_PLANNING("마케팅/광고/홍보 - 마케팅/PR/분석 - 광고기획"),
@@ -54,6 +68,9 @@ public enum InterestField {
     GLOBAL_MARKETING("마케팅/광고/홍보 - 마케팅/PR/분석 - 해외마케팅"),
     PR("마케팅/광고/홍보 - 마케팅/PR/분석 - 언론홍보/PR"),
     SURVEY_RESEARCH("마케팅/광고/홍보 - 마케팅/PR/분석 - 설문/리서치"),
+
+    MARKETING_ETC("마케팅/광고/홍보 - 마케팅/PR/분석 - 기타"),
+    EXHIBITION_ETC("마케팅/광고/홍보 - 전시/컨벤션 - 기타"),
 
     // IT
     DOTNET_DEV("IT/인터넷 - 웹개발 - .NET 개발자"),
@@ -80,6 +97,12 @@ public enum InterestField {
     DATA_ENGINEER("IT/인터넷 - DBA/데이터베이스 - 데이터 엔지니어"),
     PYTHON_DEV("IT/인터넷 - DBA/데이터베이스 - 파이썬 개발자"),
     BI_ENGINEER("IT/인터넷 - DBA/데이터베이스 - BI 엔지니어"),
+
+    WEB_DEV_ETC("IT/인터넷 - 웹개발 - 기타"),
+    APP_DEV_ETC("IT/인터넷 - 응용프로그램개발 - 기타"),
+    SYSTEM_DEV_ETC("IT/인터넷 - ERP/시스템개발/설계 - 기타"),
+    NETWORK_SECURITY_ETC("IT/인터넷 - 네트워크/서버/보안 - 기타"),
+    DB_ETC("IT/인터넷 - DBA/데이터베이스 - 기타"),
 
     ETC("기타 - 기타 - 기타");
 
