@@ -1,8 +1,6 @@
 # 📢 알려주잡 (AllyeojuJob)
 > 고학년 취업 준비 대학생에게 필요한 정보를 **AI가 분석하여 선제적으로 제공하는 취업 정보 알림 서비스**
-
 <img width="3840" height="2160" alt="image" src="https://github.com/user-attachments/assets/42747aa2-bfea-4ab8-be7c-fd3e3cbde0d4" />
-
 
 ---
 
@@ -41,6 +39,7 @@
 
 ## 👨‍👩‍👧‍👦 팀원 소개
 
+[Team Organization](https://github.com/Realthon-ETF)
 | 김수겸 | 고연오 | 양은서 | 이승제 | 길민경
 |:-----:|:-----:|:-----:|:-----:|:-----:|
 | 팀장, AI | AI | Backend | Frontend | Design |
